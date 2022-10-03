@@ -5,7 +5,7 @@ import { makeWhereOptions, throwError } from './utils';
 import { FilterFields } from '../types';
 import { iNewsFeedService } from '../NewsFeedService';
 
-export class NewsFeedRepository implements iNewsFeedService {
+export class NewsFeedService implements iNewsFeedService {
   private repository: Repository<NewsFeed>;
   constructor(repository?: Repository<NewsFeed>) {
     this.repository = repository ? repository : mysqlDataSource.getRepository(NewsFeed);
@@ -49,6 +49,51 @@ export class NewsFeedRepository implements iNewsFeedService {
       }
     }
 
+    const newsfeeds = await this.repository.findAndCount(options);
+    return newsfeeds;
+  };
+
+  findByUserAndPageAndSizeAndFilterAndOrder = async (userId: number, page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[NewsFeed[], number]> => {
+    const options: FindManyOptions<NewsFeed> = {
+      skip: ((page - 1) * size),
+      take: size
+    };
+
+    //TODO:
+    //Olyanra kialakítani, hogy a newsfeednél kiírassa azokat, amelyik seriesId-ja benne van a userSeries-ben a userId mellett!
+    if(filter) {
+      const fields: FilterFields[] = [{name: 'series', field: 'title'}, 'title', 'modification'];
+      options.where = makeWhereOptions(filter, fields);
+    }
+
+    if(order) {
+      switch (order) {
+        case "series":
+          options.order = {
+            series: {
+              title: ascendingDirection ? 'ASC' : 'DESC', 
+            }
+          }
+          break;
+        case "title":
+          options.order = {
+            title: ascendingDirection ? 'ASC' : 'DESC', 
+          }
+          break;
+        case "modification":
+        default:
+          options.order = {
+            modification: ascendingDirection ? 'ASC' : 'DESC', 
+          }
+          break;
+      }
+    } else {
+      options.order = {
+        id: ascendingDirection ? 'ASC' : 'DESC', 
+      }
+    }
+
+    throw new Error('Not implemented!');
     const newsfeeds = await this.repository.findAndCount(options);
     return newsfeeds;
   };

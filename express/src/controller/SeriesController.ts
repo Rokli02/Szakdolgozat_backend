@@ -6,10 +6,8 @@ import { iSeriesService } from '../service/SeriesService';
 
 export class SeriesController {
   private service: iSeriesService;
-  private seasonService: iSeasonService;
-  constructor(service: iSeriesService, seasonService: iSeasonService) {
+  constructor(service: iSeriesService) {
     this.service = service;
-    this.seasonService = seasonService;
   }
 
   allSeries = async (req: Request<{ page: number}, any, any, { size: number, filt: string, ordr: string, dir: boolean}>, res: Response, next: NextFunction) => {
@@ -62,7 +60,7 @@ export class SeriesController {
   //
   //  Season metódusok 
   //
-
+/*
   allSeason = async (req: Request<{ id: number }>, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
@@ -107,5 +105,5 @@ export class SeriesController {
       console.error('in remove season:\n', err);
       next(err);
     }
-  }
+  }*/
 }

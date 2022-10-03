@@ -5,7 +5,7 @@ import { hasValidIdParameter, hasValidPageAndSize } from '../controller/Validati
 import { AuthorizationSerivce } from '../service/implementation/AuthorizationService';
 import { UserSeriesService } from '../service/implementation/UserSeriesService';
 
-export const userRoutes = () => {
+export const userSeriesRoutes = () => {
   const router = Router();
   const userseriesController = new UserSeriesController(new UserSeriesService());
   const auth = new AuthorizationController(new AuthorizationSerivce());

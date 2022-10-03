@@ -4,7 +4,7 @@ import mysqlDataSource from '../../data-source';
 import { iCategoryService } from '../CategoryService';
 import { throwError } from './utils';
 
-export class CategoryRepository implements iCategoryService {
+export class CategoryService implements iCategoryService {
   private repository: Repository<Category>;
   constructor(repository?: Repository<Category>) {
     this.repository = repository ? repository : mysqlDataSource.getRepository(Category);

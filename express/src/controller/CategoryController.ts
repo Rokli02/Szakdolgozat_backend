@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Category } from '../entity/Category';
 import { iCategoryService } from '../service/CategoryService';
 
-export class StatusController {
+export class CategoryController {
   private service: iCategoryService;
   constructor(service: iCategoryService) {
       this.service = service;
