@@ -57,7 +57,7 @@ export class AuthorizationSerivce implements iAuthorizationService {
       { expiresIn: process.env.JWT_EXPIRATION }
     );
 
-    return 'Bearer ' + token;
+    return token;
   };
 
   signup = async (newUser: NewUser): Promise<boolean> => {

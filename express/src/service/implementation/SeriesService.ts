@@ -1,14 +1,17 @@
-import { FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, In, Repository } from 'typeorm';
 import { Series } from '../../entity/Series';
 import mysqlDataSource from '../../data-source';
 import { makeWhereOptions, throwError } from './utils';
-import { FilterFields } from '../types';
+import { ActionSeparatedSeason, FilterFields } from '../types';
 import { iSeriesService } from '../SeriesService';
+import { Season } from '../../entity/Season';
 
 export class SeriesService implements iSeriesService {
   private repository: Repository<Series>;
-  constructor(repository?: Repository<Series>) {
+  private seasonRepository: Repository<Season>;
+  constructor(repository?: Repository<Series>, seasonRepository?: Repository<Season>) {
     this.repository = repository ? repository : mysqlDataSource.getRepository(Series);
+    this.seasonRepository = seasonRepository ? seasonRepository : mysqlDataSource.getRepository(Season);
   }
 
   findByPageAndSizeAndFilterAndOrder = async (page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[Series[], number]> => {
@@ -87,11 +90,66 @@ export class SeriesService implements iSeriesService {
       throwError('400', 'No series is given to update!');
     }
     createdSeries.id = id;
-    createdSeries.seasons = undefined;
 
     const dbSeries = await this.repository.findOneBy({id: id});
     if(!dbSeries) {
       throwError('400', `There is no series with id ${id}!`);
+    }
+
+    //Season ID-t kell ellenőrizni, hogy az tényleg a mi sorozatunkhoz tartozik-e!
+    const seasonIds = entity.seasons.map(s => s?.id).filter(s => s);
+    const dbSeasons = await this.seasonRepository.findBy({
+      id: In(seasonIds),
+      series: {
+        id: id
+      }
+    });
+
+    if(dbSeasons.length !== seasonIds.length) {
+      throwError('400', 'Can\'t update series, because of the gives seasons!');
+    }
+
+    const actionSeasons: ActionSeparatedSeason = {deleteSeasons: [], saveSeasons: [], updateSeasons: []};
+    for(const season of createdSeries.seasons) {
+      season.series = createdSeries;
+      if(!season.season && !season.episode && season.id) {
+        actionSeasons.deleteSeasons.push(season.id);
+        continue;
+      }
+
+      if((season.season || season.episode) && season.id) {
+        actionSeasons.updateSeasons.push(season);
+        continue;
+      }
+
+      if(season.season && season.episode && !season.id) {
+        actionSeasons.saveSeasons.push(season);
+        continue;
+      }
+
+      throwError('400', 'Some problem occured during calculation of season updates!');
+    }
+    createdSeries.seasons = undefined;
+
+    //season műveletek
+    if(actionSeasons.deleteSeasons.length > 0) {
+      const result = await this.seasonRepository.delete(actionSeasons.deleteSeasons);
+      if(!result || result.affected < 1) {
+        throwError('400', 'Some problem occured during deleting seasons!');
+      }
+    }
+    if(actionSeasons.updateSeasons.length > 0) {
+      //Talán le kell kérdezni az adatbázisba levő adatokat
+      const result = await this.seasonRepository.save(actionSeasons.updateSeasons);
+      if(!result || result.length < 1) {
+        throwError('400', 'Some problem occured during updating seasons!');
+      }
+    }
+    if(actionSeasons.saveSeasons.length > 0) {
+      const result = await this.seasonRepository.save(actionSeasons.saveSeasons);
+      if(!result || result.length < 1) {
+        throwError('400', 'Some problem occured during saving seasons!');
+      }
     }
 
     const updatedSeries = await this.repository.update({id: id}, createdSeries);

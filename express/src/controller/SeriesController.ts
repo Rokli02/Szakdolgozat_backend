@@ -3,7 +3,6 @@ import { Season } from '../entity/Season';
 import { Series } from '../entity/Series';
 import { iSeasonService } from '../service/SeasonService';
 import { iSeriesService } from '../service/SeriesService';
-import { ActionSeparatedSeason, SeasonDto } from './type';
 
 export class SeriesController {
   private service: iSeriesService;
@@ -39,18 +38,8 @@ export class SeriesController {
   }
 
   saveSeries = async (req: Request<any, any, Series>, res: Response, next: NextFunction) => {
-    let seasons: Season[] = null;
-    if(req.body.seasons && req.body.seasons.length > 0) {
-      seasons = req.body.seasons;
-      delete req.body.seasons;
-    }
-
     try {
       const series = await this.service.save(req.body);
-      if(seasons) {
-        const savedSeasons = await this.seasonService.save(seasons);
-        series.seasons = savedSeasons;
-      }
       return res.status(201).json({series});
     } catch(err) {
         console.error('in save series:\n', err);
@@ -60,47 +49,9 @@ export class SeriesController {
 
   updateSeries = async (req: Request<{ id: number }, any, Series>, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    let seasons: SeasonDto[];
-    if(req.body.seasons && req.body.seasons.length > 0) {
-      seasons = (req.body.seasons as unknown as SeasonDto[]);
-      delete req.body.seasons;
-    }
-    const actionSeasons: ActionSeparatedSeason = {saveSeason: [], deleteSeason: [], updateSeason: []};
-    for(const season of seasons) {
-      switch (season.action) {
-        case 'save':
-          delete season.action;
-          actionSeasons.saveSeason.push(season as unknown as Season);
-          break;
-        case 'update':
-          delete season.action;
-          actionSeasons.updateSeason.push(season as unknown as Season);
-          break;
-        case 'delete':
-          delete season.action;
-          actionSeasons.deleteSeason.push(season as unknown as Season);
-          break; 
-        default:
-          break;
-      }
-    }
-    //Itt menteni, frissíteni, vagy törölni az évadokat!!!
-    //delete  delete() vagy remove();
-    //update  save();
-    //save    save();
-    //TODO: test!
 
     try {
       await this.service.update(id, req.body);
-      if(actionSeasons.deleteSeason.length > 0) {
-        await this.seasonService.removeMultiple(actionSeasons.deleteSeason.map(s => s.id));
-      }
-      if(actionSeasons.updateSeason.length > 0) {
-        await this.seasonService.updateMultiple(actionSeasons.updateSeason);
-      }
-      if(actionSeasons.saveSeason.length > 0) {
-        await this.seasonService.save(actionSeasons.saveSeason);
-      }
       return res.json({ message: 'Updated succesfully!' });
     } catch(err) {
         console.error('in update series:\n', err);

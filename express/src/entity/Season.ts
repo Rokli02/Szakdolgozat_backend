@@ -15,7 +15,7 @@ export class Season {
 
     @ManyToOne(() => Series, series => series.seasons, {
       nullable: false,
-      onDelete: 'CASCADE',
+      onDelete: 'CASCADE'
     })
     series: Series;
 }

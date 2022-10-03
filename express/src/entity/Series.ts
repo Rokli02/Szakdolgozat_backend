@@ -30,12 +30,14 @@ export class Series {
   newsfeeds: NewsFeed[];
 
   @OneToMany(() => Season, season => season.series, {
-    eager: true
+    eager: true,
+    cascade: ['insert', 'update']
   })
   seasons: Season[]
 
   @ManyToMany(() => Category, category => category.serieses, {
     eager: true,
+    onUpdate: 'CASCADE'
     //cascade: true //Talán kell ez ide, de nem biztos
   })
   @JoinTable()
