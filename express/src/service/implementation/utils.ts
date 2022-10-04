@@ -1,4 +1,4 @@
-import { Like } from 'typeorm';
+import { Like, SelectQueryBuilder } from 'typeorm';
 import { FilterFields } from '../types';
 
 export function makeWhereOptionsForUserSeries(userId: number, filter: string, fields: FilterFields[], status?: number) {
@@ -55,6 +55,25 @@ export function makeWhereOptions(filter: string, fields: FilterFields[]) {
   });
   
   return where;
+}
+
+export function makeQueryBuilderOrWhere<T>(query: SelectQueryBuilder<T>, filter: string, fields: string[]) {
+  for(let field of fields) {
+    query.orWhere(`${field} LIKE "%${filter}%"`);
+  }
+}
+
+export function makeStringOrWhere(filter: string, fields: string[]): string {
+  let whereStatement: string = '(';
+  if(fields.length > 0) {
+    whereStatement += `${fields[0]} LIKE "%${filter}%"`;
+  }
+  for(let i = 1; i < fields.length; i++) {
+    whereStatement += ` OR ${fields[i]} LIKE "%${filter}%"`;
+  }
+
+  whereStatement += ')';
+  return whereStatement;
 }
 
 export function throwError(name: string, message: string) {

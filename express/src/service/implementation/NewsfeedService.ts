@@ -1,7 +1,7 @@
-import { FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, Repository, SelectQueryBuilder } from 'typeorm';
 import { NewsFeed } from '../../entity/NewsFeed';
 import mysqlDataSource from '../../data-source';
-import { makeWhereOptions, throwError } from './utils';
+import { makeQueryBuilderOrWhere, makeStringOrWhere, makeWhereOptions, throwError } from './utils';
 import { FilterFields } from '../types';
 import { iNewsFeedService } from '../NewsFeedService';
 
@@ -12,94 +12,78 @@ export class NewsFeedService implements iNewsFeedService {
   }
 
   findByPageAndSizeAndFilterAndOrder = async (page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[NewsFeed[], number]> => {
-    const options: FindManyOptions<NewsFeed> = {
-      skip: ((page - 1) * size),
-      take: size
-    };
+    const direction = ascendingDirection ? "ASC" : "DESC";
+    const query: SelectQueryBuilder<NewsFeed> = this.repository.createQueryBuilder('newsfeed')
+    .leftJoinAndSelect('newsfeed.series', 'series')
+    .skip((page - 1) * size)
+    .take(size);
 
     if(filter) {
-      const fields: FilterFields[] = [{name: 'series', field: 'title'}, 'title', 'modification'];
-      options.where = makeWhereOptions(filter, fields);
+      const fields: string[] = ['series.title', 'newsfeed.title', 'newsfeed.modification'];
+      makeQueryBuilderOrWhere(query, filter, fields);
     }
 
     if(order) {
       switch (order) {
         case "series":
-          options.order = {
-            series: {
-              title: ascendingDirection ? 'ASC' : 'DESC', 
-            }
-          }
+          query.orderBy('series.title', direction);
           break;
         case "title":
-          options.order = {
-            title: ascendingDirection ? 'ASC' : 'DESC', 
-          }
+          query.orderBy('newsfeed.title', direction);
           break;
         case "modification":
         default:
-          options.order = {
-            modification: ascendingDirection ? 'ASC' : 'DESC', 
-          }
+          query.orderBy('newsfeed.modification', direction);
           break;
       }
     } else {
-      options.order = {
-        id: ascendingDirection ? 'ASC' : 'DESC', 
-      }
+      query.orderBy('newsfeed.id', direction);
     }
 
-    const newsfeeds = await this.repository.findAndCount(options);
-    return newsfeeds;
+    return query.getManyAndCount();
   };
-
+  
   findByUserAndPageAndSizeAndFilterAndOrder = async (userId: number, page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[NewsFeed[], number]> => {
-    const options: FindManyOptions<NewsFeed> = {
-      skip: ((page - 1) * size),
-      take: size
-    };
+    const direction = ascendingDirection ? "ASC" : "DESC";
+    const query: SelectQueryBuilder<NewsFeed> = this.repository.createQueryBuilder('newsfeed')
+    .leftJoinAndSelect('newsfeed.series', 'series')
+    .leftJoin('series.userserieses', 'userseries')
+    .skip((page - 1) * size)
+    .take(size);
 
-    //TODO:
-    //Olyanra kialakítani, hogy a newsfeednél kiírassa azokat, amelyik seriesId-ja benne van a userSeries-ben a userId mellett!
     if(filter) {
-      const fields: FilterFields[] = [{name: 'series', field: 'title'}, 'title', 'modification'];
-      options.where = makeWhereOptions(filter, fields);
+      const fields: string[] = ['series.title', 'newsfeed.title', 'newsfeed.modification'];
+      const whereStatement = makeStringOrWhere(filter, fields);
+      query.where(`userseries.userId = ${userId} AND ${whereStatement}`)
+    } else {
+      query.where('userseries.userId = :userId', {userId});
     }
 
     if(order) {
       switch (order) {
         case "series":
-          options.order = {
-            series: {
-              title: ascendingDirection ? 'ASC' : 'DESC', 
-            }
-          }
+          query.orderBy('series.title', direction);
           break;
         case "title":
-          options.order = {
-            title: ascendingDirection ? 'ASC' : 'DESC', 
-          }
+          query.orderBy('newsfeed.title', direction);
           break;
         case "modification":
         default:
-          options.order = {
-            modification: ascendingDirection ? 'ASC' : 'DESC', 
-          }
+          query.orderBy('newsfeed.modification', direction);
           break;
       }
     } else {
-      options.order = {
-        id: ascendingDirection ? 'ASC' : 'DESC', 
-      }
+      query.orderBy('newsfeed.id', direction);
     }
 
-    throw new Error('Not implemented!');
-    const newsfeeds = await this.repository.findAndCount(options);
-    return newsfeeds;
+    return query.getManyAndCount();
   };
 
   findOne = async (id: number): Promise<NewsFeed> => {
-    const newsFeed = await this.repository.findOneBy({id: id});
+    const newsFeed = await this.repository.findOne({
+      where: {id},
+      relations: {series: true},
+    });
     if(!newsFeed) {
       throwError('404', `There is no newsfeed with id ${id}!`);
     }
@@ -129,12 +113,12 @@ export class NewsFeedService implements iNewsFeedService {
     }
     createdNewsFeed.id = id;
 
-    const dbNewsFeed = await this.repository.findOneBy({id: id});
+    const dbNewsFeed = await this.repository.findOneBy({id});
     if(!dbNewsFeed) {
       throwError('404', `There is no category with id ${id}!`);
     }
 
-    const updatedNewsFeed = await this.repository.update({id: id}, createdNewsFeed);
+    const updatedNewsFeed = await this.repository.update({id}, createdNewsFeed);
     console.log("updatedNewsFeed: ");
     console.log(updatedNewsFeed);
     if(!updatedNewsFeed || updatedNewsFeed.affected < 1) {
@@ -145,7 +129,7 @@ export class NewsFeedService implements iNewsFeedService {
   };
 
   remove = async (id: number): Promise<number> => {
-    const removedNewsFeed = await this.repository.delete({id: id});
+    const removedNewsFeed = await this.repository.delete({id});
     if(!removedNewsFeed || removedNewsFeed.affected < 1) {
       throwError('400', 'Couldn\'t remove newsfeed!');
     }

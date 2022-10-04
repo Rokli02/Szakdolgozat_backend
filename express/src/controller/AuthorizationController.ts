@@ -54,7 +54,7 @@ export class AuthorizationController {
     }
   }
 
-  verifyToken = async (req: Request, res: Response, next: NextFunction) => {
+  verifyToken = async (req: Request<{ authorization?: string }>, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
     if(!authorization) {
       return res.status(401).json({ message: 'You must sign in first!'});
@@ -76,6 +76,7 @@ export class AuthorizationController {
     }
 
     if(!this.service.hasRight(req.user, 'user')) {
+      console.log('inUserRight');
       return res.status(403).json({message: 'You don\'t have permission to access this!'});
     }
     
@@ -88,6 +89,7 @@ export class AuthorizationController {
     }
 
     if(!this.service.hasRight(req.user, 'admin')) {
+      console.log('inAdminRight');
       return res.status(403).json({message: 'You don\'t have permission to access this!'});
     }
 
@@ -101,6 +103,7 @@ export class AuthorizationController {
 
     if(!this.service.hasRight(req.user, 'siteManager') && 
        !this.service.hasRight(req.user, 'admin')) {
+        console.log('inSiteManagerRight');
       return res.status(403).json({message: 'You don\'t have permission to access this!'});
     }
 

@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, On
 import { Category } from './Category';
 import { NewsFeed } from './NewsFeed';
 import { Season } from './Season';
+import { UserSeries } from './UserSeries';
 
 @Entity()
 export class Series {
@@ -30,16 +31,19 @@ export class Series {
   newsfeeds: NewsFeed[];
 
   @OneToMany(() => Season, season => season.series, {
-    eager: true,
+    //eager: true,
     cascade: ['insert', 'update']
   })
   seasons: Season[]
 
   @ManyToMany(() => Category, category => category.serieses, {
-    eager: true,
+    //eager: true,
     onUpdate: 'CASCADE'
     //cascade: true //Talán kell ez ide, de nem biztos
   })
   @JoinTable()
   categories: Category[]
+
+  @OneToMany(() => UserSeries, feed => feed.series)
+  userserieses: UserSeries[];
 }

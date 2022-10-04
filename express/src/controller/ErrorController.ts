@@ -15,6 +15,8 @@ export function errorHandler(err: Error, req: Request, res: Response, next: Next
     case "QueryFailedError":
       if((err as QueryFailedError).driverError.code === "ER_DUP_ENTRY")
         return res.status(400).json({ message: "Duplicate values are not accepted!" });
+      if((err as QueryFailedError).driverError.code === "ER_NO_REFERENCED_ROW_2")
+        return res.status(400).json({ message: "Can\'t append to a not existing value!" });
       break;
     default:
       break;

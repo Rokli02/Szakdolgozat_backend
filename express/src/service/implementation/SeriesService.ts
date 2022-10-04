@@ -1,8 +1,8 @@
-import { FindManyOptions, In, Repository } from 'typeorm';
+import { In, Repository, SelectQueryBuilder } from 'typeorm';
 import { Series } from '../../entity/Series';
 import mysqlDataSource from '../../data-source';
-import { makeWhereOptions, throwError } from './utils';
-import { ActionSeparatedSeason, FilterFields } from '../types';
+import { makeQueryBuilderOrWhere, throwError } from './utils';
+import { ActionSeparatedSeason } from '../types';
 import { iSeriesService } from '../SeriesService';
 import { Season } from '../../entity/Season';
 
@@ -15,53 +15,53 @@ export class SeriesService implements iSeriesService {
   }
 
   findByPageAndSizeAndFilterAndOrder = async (page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[Series[], number]> => {
-    const options: FindManyOptions<Series> = {
-      skip: ((page - 1) * size),
-      take: size
-    };
+    const direction = ascendingDirection ? "ASC" : "DESC";
+    const query: SelectQueryBuilder<Series> = this.repository.createQueryBuilder('series')
+    .leftJoinAndSelect('series.categories', 'category')
+    .leftJoinAndSelect('series.seasons', 'season')
+    .skip((page - 1) * size)
+    .take(size);
 
     if(filter) {
-      const fields: FilterFields[] = ['title', 'prodYear', {name: 'categories', field: 'name'}];
-      options.where = makeWhereOptions(filter, fields);
+      const fields: string[] = ['series.title', 'series.prodYear', 'category.name'];
+      makeQueryBuilderOrWhere(query, filter, fields);
     }
-
+    
     if(order) {
       switch (order) {
         case "prodYear":
-          options.order = {
-            prodYear: ascendingDirection ? "ASC" : "DESC",
-            added: ascendingDirection ? "ASC" : "DESC",
-          }
+          query.orderBy('series.prodYear', direction)
+            .addOrderBy('series.added', direction);
           break;
         case "ageLimit":
-          options.order = {
-            ageLimit: ascendingDirection ? "ASC" : "DESC",
-          }
+          query.orderBy('series.ageLimit', direction);
           break;
         case "length":
-          options.order = {
-            length: ascendingDirection ? "ASC" : "DESC",
-          }
+          query.orderBy('series.length', direction);
           break;
         case "title":
         default:
-          options.order = {
-            title: ascendingDirection ? "ASC" : "DESC",
-          }
+          query.orderBy('series.title', direction);
           break;
       }
     } else {
-      options.order = {
-        id: ascendingDirection ? "ASC" : "DESC",
-      }
+      query.orderBy('series.id', direction);
     }
     
-    const serieses = await this.repository.findAndCount(options);
-    return serieses;
+    return await query.getManyAndCount();
   };
 
   findOne = async (id: number): Promise<Series> => {
-    const series = await this.repository.findOneBy({id: id});
+    
+    const series = await this.repository.findOne({relations: {
+        seasons: true,
+        categories: true,
+      },
+      where: {
+        id
+      }
+    })
+    //const series = await this.repository.findOneBy({id: id});
     if(!series) {
       throwError('404', 'Couldn\'t find series!');
     }

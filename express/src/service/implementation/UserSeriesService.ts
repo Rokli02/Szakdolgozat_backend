@@ -1,7 +1,7 @@
-import { FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, Repository, SelectQueryBuilder } from 'typeorm';
 import { UserSeries } from '../../entity/UserSeries';
 import mysqlDataSource from '../../data-source';
-import { makeWhereOptionsForUserSeries, throwError } from './utils';
+import { makeQueryBuilderOrWhere, makeStringOrWhere, makeWhereOptionsForUserSeries, throwError } from './utils';
 import { FilterFields } from '../types';
 import { iUserSeriesService } from '../UserSeriesService';
 
@@ -12,63 +12,54 @@ export class UserSeriesService implements iUserSeriesService {
   }
 
   findByPageAndSizeAndFilterAndStatusAndOrder = async (userId: number, page: number, size: number, filter?: string, status?: number, order?: string, ascendingDirection: boolean = false): Promise<[UserSeries[], number]> => {
-    const options: FindManyOptions<UserSeries> = {
-      skip: ((page - 1) * size),
-      take: size
-    };
+    const direction = ascendingDirection ? "ASC" : "DESC";
+    const query: SelectQueryBuilder<UserSeries> = this.repository.createQueryBuilder('userseries')
+    .leftJoinAndSelect('userseries.series', 'series')
+    .leftJoinAndSelect('series.categories', 'category')
+    .leftJoinAndSelect('series.seasons', 'season')
+    .leftJoinAndSelect('userseries.status', 'status')
+    .skip((page - 1) * size)
+    .take(size);
+
+    let baseWhereStatement: string = `userseries.userId = ${userId}`;
+
+    if(status) {
+      baseWhereStatement += ` AND status.id = ${status}`;
+    }
 
     if(filter) {
-      const fields: FilterFields[] = ['title', 'prodYear', { name: 'categories', field: 'name' }];
-      options.where = makeWhereOptionsForUserSeries(userId, filter, fields, status);
+      const fields: string[] = ['series.title', 'series.prodYear', 'category.name'];
+      const whereStatement = makeStringOrWhere(filter, fields);
+      query.where(`${baseWhereStatement} AND ${whereStatement}`);
+    } else {
+      query.where(baseWhereStatement);
     }
 
     if(order) {
       switch (order) {
         case 'title':
-          options.order = {
-            series: {
-              title: ascendingDirection ? 'ASC' : 'DESC',
-            }
-          }
+          query.orderBy('series.title', direction);
           break;
         case 'prodYear':
-          options.order = {
-            series: {
-              prodYear: ascendingDirection ? 'ASC' : 'DESC',
-            }
-          }
+          query.orderBy('series.prodYear', direction);
           break;
         case 'ageLimit':
-          options.order = {
-            series: {
-              ageLimit: ascendingDirection ? 'ASC' : 'DESC',
-            }
-          }
+          query.orderBy('series.ageLimit', direction);
           break;
         case 'length':
-          options.order = {
-            series: {
-              length: ascendingDirection ? 'ASC' : 'DESC',
-            }
-          }
+          query.orderBy('series.length', direction);
           break;
         case 'modification':
         default:
-          options.order = {
-            modification: ascendingDirection ? 'ASC' : 'DESC',
-          }
+          query.orderBy('userseries.modification', direction);
           break;
       }
     } else {
-      options.order = {
-        series: {
-          id: ascendingDirection ? "ASC" : "DESC",
-        }
-      }
+      query.orderBy('series.id', direction);
     }
 
-    const userSeries = await this.repository.findAndCount(options);
-    return userSeries;
+    
+    return query.getManyAndCount();
   };
 
   findOne = async (userId: number, seriesId: number): Promise<UserSeries> => {

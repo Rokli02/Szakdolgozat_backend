@@ -10,8 +10,9 @@ export class UserSeriesController {
 
   all = async (req: Request<{ page: number}, any, any, { size: number, filt: string, stat: number, ordr: string, dir: boolean}>, res: Response, next: NextFunction) => {
     const { page } = req.params;
-    const { size, filt, ordr, dir, stat } = req.query;
+    const { size, filt, ordr, dir } = req.query;
     const userId = req.user.id;
+    const stat = isNaN(req.query.stat) ? undefined : Number(req.query.stat);
     
     try {
         const userserieses = await this.service.findByPageAndSizeAndFilterAndStatusAndOrder(userId, page, size, filt, stat, ordr, dir);

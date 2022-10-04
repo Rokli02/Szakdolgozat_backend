@@ -19,7 +19,7 @@ import { statusRoutes } from './routes/status.routes';
   app.use(bodyParser.json());
   app.use('/api/auth', authRoutes());
   app.use('/api/users', userRoutes());
-  app.use('/api/users/series', userSeriesRoutes());
+  app.use('/api/user/series', userSeriesRoutes());
   app.use('/api/serieses', seriesRoutes());
   app.use('/api/newsfeeds', newsfeedRoutes());
   app.use('/api/categories', categoryRoutes());

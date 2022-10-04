@@ -21,6 +21,19 @@ export class NewsFeedController {
     }
   }
 
+  allPersonal = async (req: Request<{ page: number}, any, any, { size: number, filt: string, ordr: string, dir: boolean}>, res: Response, next: NextFunction) => {
+    const { page } = req.params;
+    const { size, filt, ordr, dir } = req.query;
+
+    try {
+      const newsfeeds = await this.service.findByUserAndPageAndSizeAndFilterAndOrder(req.user?.id, page, size, filt, ordr, dir);
+      res.json({newsfeeds: newsfeeds[0], count: newsfeeds[1]});
+    } catch(err) {
+        console.error('in all newsfeed:\n', err);
+        next(err);
+    }
+  }
+
   one = async (req: Request<{id: number}>, res: Response, next: NextFunction) => {
     const { id } = req.params;
 

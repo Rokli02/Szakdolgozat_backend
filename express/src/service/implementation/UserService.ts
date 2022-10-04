@@ -13,6 +13,7 @@ export class UserService implements iUserService {
   }
 
   findByPageAndSizeAndFilterAndOrder = async (page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[User[], number]> => {
+    const direction = ascendingDirection ? 'ASC' : 'DESC';
     const options: FindManyOptions<User> = {
       skip: ((page - 1) * size),
       take: size
@@ -27,36 +28,36 @@ export class UserService implements iUserService {
       switch (order) {
         case 'birthdate':
           options.order = {
-            birthdate: ascendingDirection ? 'ASC' : 'DESC',
-            name: ascendingDirection ? 'ASC' : 'DESC',
+            birthdate: direction,
+            name: direction,
           }
           break;
         case 'username':
           options.order = {
-            username: ascendingDirection ? 'ASC' : 'DESC',
+            username: direction,
           }
           break;
         case 'name':
           options.order = {
-            name: ascendingDirection ? 'ASC' : 'DESC',
-            username: ascendingDirection ? 'ASC' : 'DESC',
+            name: direction,
+            username: direction,
           }
           break;
         case 'email':
           options.order = {
-            email: ascendingDirection ? 'ASC' : 'DESC',
+            email: direction,
           }
           break;
         case 'created':
         default:
           options.order = {
-            created: ascendingDirection ? 'ASC' : 'DESC',
+            created: direction,
           }
           break;
       }
     } else {
       options.order = {
-        id: ascendingDirection ? 'ASC' : 'DESC',
+        id: direction,
       }
     }
 
