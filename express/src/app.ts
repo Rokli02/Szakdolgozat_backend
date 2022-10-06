@@ -32,7 +32,7 @@ import { statusRoutes } from './routes/status.routes';
   app.use(errorHandler);
 
   app.listen(PORT, () => {
-    console.log(`Express server running on port ${PORT}!`);
+    console.log(`Express server running on http://localhost:${PORT}!`);
   });
 
   //TODO: Validation middleware for saving or updating actions
