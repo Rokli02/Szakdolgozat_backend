@@ -1,13 +1,13 @@
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { UserSeries } from '../../entity/UserSeries';
-import mysqlDataSource from '../../data-source';
+//import mysqlDataSource from '../../data-source';
 import { makeStringOrWhere, throwError } from './utils';
 import { iUserSeriesService } from '../UserSeriesService';
 
 export class UserSeriesService implements iUserSeriesService {
   private repository: Repository<UserSeries>;
   constructor(repository?: Repository<UserSeries>) {
-    this.repository = repository ? repository : mysqlDataSource.getRepository(UserSeries);
+    this.repository = repository// ? repository : mysqlDataSource.getRepository(UserSeries);
   }
 
   findByPageAndSizeAndFilterAndStatusAndOrder = async (userId: number, page: number, size: number, filter?: string, status?: number, order?: string, ascendingDirection: boolean = false): Promise<[UserSeries[], number]> => {

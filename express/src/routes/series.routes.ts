@@ -13,18 +13,12 @@ export const seriesRoutes = () => {
   //Public
   router.get("/page/:page", hasValidPageAndSize,  seriesController.allSeries);
   router.get("/:id", hasValidIdParameter, seriesController.oneSeries);
-  
-  //router.get("/:id/seasons", hasValidIdParameter, seriesController.allSeason);
 
   //Protected
   router.use(auth.verifyToken, auth.hasSiteManagerRight);
   
   router.post("/", seriesController.saveSeries);
   router.put("/:id", hasValidIdParameter, seriesController.updateSeries);
-  /*
-  router.post("/seasons", auth.hasSiteManagerRight, seriesController.saveSeasons);
-  router.put("/seasons/:id", hasValidIdParameter, seriesController.updateSeason);
-  router.delete("/seasons/:id", hasValidIdParameter, seriesController.removeSeason);
-  */
+
   return router;
 }

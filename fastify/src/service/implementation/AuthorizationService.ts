@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import mysqlDataSource from '../../data-source';
+import { dataSource } from '../../plugins/autoload/dataSource';
 import { Role } from '../../entity/Role';
 import { User } from '../../entity/User';
 import { NewUser } from '../types';
@@ -16,11 +16,11 @@ export class AuthorizationSerivce implements iAuthorizationService {
     roleRepository?: Repository<Role>
   ) {
     this.repository = repository
-      ? repository
-      : mysqlDataSource.getRepository(User);
+       ? repository
+       : dataSource.getRepository(User);
     this.roleRepository = roleRepository
-      ? roleRepository
-      : mysqlDataSource.getRepository(Role);
+       ? roleRepository
+       : dataSource.getRepository(Role);
   }
 
   findAllRole = async (): Promise<Role[]> => {
