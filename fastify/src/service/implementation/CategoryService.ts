@@ -1,13 +1,13 @@
 import { Repository } from 'typeorm';
 import { Category } from '../../entity/Category';
-//import mysqlDataSource from '../../data-source';
+import { dataSource } from '../../plugins/autoload/dataSource';
 import { iCategoryService } from '../CategoryService';
 import { throwError } from './utils';
 
 export class CategoryService implements iCategoryService {
   private repository: Repository<Category>;
   constructor(repository?: Repository<Category>) {
-    this.repository = repository// ? repository : mysqlDataSource.getRepository(Category);
+    this.repository = repository ? repository : dataSource.getRepository(Category);
   }
 
   findAll = async (): Promise<Category[]> => {

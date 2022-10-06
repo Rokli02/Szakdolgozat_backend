@@ -1,13 +1,13 @@
 import { In, Repository } from 'typeorm';
 import { Season } from '../../entity/Season';
-//import mysqlDataSource from '../../data-source';
+import { dataSource } from '../../plugins/autoload/dataSource';
 import { iSeasonService } from '../SeasonService';
 import { throwError } from './utils';
 
 export class SeasonService implements iSeasonService {
   private repository: Repository<Season>;
   constructor(repository?: Repository<Season>) {
-    this.repository = repository// ? repository : mysqlDataSource.getRepository(Season);
+    this.repository = repository ? repository : dataSource.getRepository(Season);
   }
 
   findAllBySeriesid = (seriesId: number): Promise<Season[]> => {

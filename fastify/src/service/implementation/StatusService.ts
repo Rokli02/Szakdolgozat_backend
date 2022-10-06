@@ -1,13 +1,13 @@
 import { Repository } from 'typeorm';
 import { Status } from '../../entity/Status';
-//import mysqlDataSource from '../../data-source';
+import { dataSource } from '../../plugins/autoload/dataSource';
 import { iStatusService } from '../StatusService';
 import { throwError } from './utils';
 
 export class StatusService implements iStatusService {
   private repository: Repository<Status>;
   constructor(repository?: Repository<Status>) {
-    this.repository = repository// ? repository : mysqlDataSource.getRepository(Status);
+    this.repository = repository ? repository : dataSource.getRepository(Status);
   }
 
   findAll = async (): Promise<Status[]> => {

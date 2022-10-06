@@ -15,12 +15,8 @@ export class AuthorizationSerivce implements iAuthorizationService {
     repository?: Repository<User>,
     roleRepository?: Repository<Role>
   ) {
-    this.repository = repository
-       ? repository
-       : dataSource.getRepository(User);
-    this.roleRepository = roleRepository
-       ? roleRepository
-       : dataSource.getRepository(Role);
+    this.repository = repository ? repository : dataSource.getRepository(User);
+    this.roleRepository = roleRepository ? roleRepository : dataSource.getRepository(Role);
   }
 
   findAllRole = async (): Promise<Role[]> => {

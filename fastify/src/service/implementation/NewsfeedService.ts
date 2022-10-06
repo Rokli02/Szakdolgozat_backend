@@ -1,13 +1,13 @@
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { NewsFeed } from '../../entity/NewsFeed';
-//import mysqlDataSource from '../../data-source';
 import { makeQueryBuilderOrWhere, makeStringOrWhere, throwError } from './utils';
 import { iNewsFeedService } from '../NewsFeedService';
+import { dataSource } from '../../plugins/autoload/dataSource';
 
 export class NewsFeedService implements iNewsFeedService {
   private repository: Repository<NewsFeed>;
   constructor(repository?: Repository<NewsFeed>) {
-    this.repository = repository// ? repository : mysqlDataSource.getRepository(NewsFeed);
+    this.repository = repository ? repository : dataSource.getRepository(NewsFeed);
   }
 
   findByPageAndSizeAndFilterAndOrder = async (page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[NewsFeed[], number]> => {

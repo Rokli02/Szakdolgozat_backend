@@ -1,17 +1,17 @@
 import { In, Repository, SelectQueryBuilder } from 'typeorm';
 import { Series } from '../../entity/Series';
-//import mysqlDataSource from '../../data-source';
 import { makeQueryBuilderOrWhere, throwError } from './utils';
 import { ActionSeparatedSeason } from '../types';
 import { iSeriesService } from '../SeriesService';
 import { Season } from '../../entity/Season';
+import { dataSource } from '../../plugins/autoload/dataSource';
 
 export class SeriesService implements iSeriesService {
   private repository: Repository<Series>;
   private seasonRepository: Repository<Season>;
   constructor(repository?: Repository<Series>, seasonRepository?: Repository<Season>) {
-    this.repository = repository// ? repository : mysqlDataSource.getRepository(Series);
-    this.seasonRepository = seasonRepository// ? seasonRepository : mysqlDataSource.getRepository(Season);
+    this.repository = repository ? repository : dataSource.getRepository(Series);
+    this.seasonRepository = seasonRepository ? seasonRepository : dataSource.getRepository(Season);
   }
 
   findByPageAndSizeAndFilterAndOrder = async (page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[Series[], number]> => {

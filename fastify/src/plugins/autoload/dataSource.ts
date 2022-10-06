@@ -20,6 +20,7 @@ export default fp(async (fastify) => {
     console.log('Connected to database succesfully!')
   }).catch((err) => {
     console.log('Couldn\'t connect to the database!');
+    console.error(err);
     throw new Error(err.message);
   });
 });

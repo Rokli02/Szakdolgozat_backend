@@ -1,4 +1,6 @@
 import "reflect-metadata";
+import { config } from 'dotenv';
+config();
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import {Request, Response} from "express";
@@ -6,12 +8,10 @@ import { errorHandler } from './controller/ErrorController';
 import { userRoutes } from './routes/user.routes';
 import { userSeriesRoutes } from './routes/userseries.routes';
 import { authRoutes } from './routes/auth.routes';
-import { config } from 'dotenv';
 import { seriesRoutes } from './routes/series.routes';
 import { newsfeedRoutes } from './routes/newsfeed.routes';
 import { categoryRoutes } from './routes/category.routes';
 import { statusRoutes } from './routes/status.routes';
-  config();
 
   const app = express();
   const PORT = process.env.PORT || 5001;
@@ -28,7 +28,7 @@ import { statusRoutes } from './routes/status.routes';
   app.get('/', (req: Request, res: Response) => {
     res.json({ message: 'Api is available!' });
   });
-
+  
   app.use(errorHandler);
 
   app.listen(PORT, () => {

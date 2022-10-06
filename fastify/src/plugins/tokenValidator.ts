@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest, HookHandlerDoneFunction 
 import fp from 'fastify-plugin';
 import { iAuthorizationService } from '../service/AuthorizationService';
 import { AuthorizationSerivce } from '../service/implementation/AuthorizationService';
-import { errorHandler } from './errorHandler';
+import { errorHandler } from '../handlers/errorHandler';
 
 
 export default fp(async (fastify: FastifyInstance) => {
@@ -11,16 +11,15 @@ export default fp(async (fastify: FastifyInstance) => {
   fastify.addHook('preHandler', async (req: FastifyRequest<{Headers: { Authorization?: string }}>, res: FastifyReply, done: HookHandlerDoneFunction) => {
     const { Authorization } = req.headers;
     if(!Authorization) {
-      return res.status(401).send({ message: 'There is no authorization token!' });
+      return res.status(401).send({ message: 'You must login first!' });
     }
 
     try {
       const user = await authService.verifyUserToken(Authorization);
       fastify.user = user;
     } catch(err) {
-      return errorHandler(req, res, err);
+      return errorHandler(res, err);
     }
-    fastify.user = null;
   });
   
 })

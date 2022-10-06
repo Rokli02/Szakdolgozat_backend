@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyPluginAsync } from 'fastify'
-import tokenValidator from '../../../handlers/tokenValidator'
+import tokenValidator from '../../../plugins/tokenValidator'
 
 const newsfeedRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
   fastify.get('/page/:page', async function (request, reply) {
@@ -17,13 +17,13 @@ const newsfeedRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Pro
 }
 
 async function privateUserRoutes(fastify: FastifyInstance) {
-  await fastify.register(tokenValidator)
+  await fastify.register(tokenValidator);
     fastify.get('/page/:page', async function (request, reply) {
       return { personal: 'yes', news: 'about serieses' }
     })
 }
 async function privateSiteManagerRoutes(fastify: FastifyInstance) {
- await fastify.register(tokenValidator)
+ await fastify.register(tokenValidator);
    fastify.post('/', async function (request, reply) {
      return { post: true }
    })

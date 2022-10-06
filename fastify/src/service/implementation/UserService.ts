@@ -1,15 +1,15 @@
 import { FindManyOptions, Repository } from 'typeorm';
 import { User } from '../../entity/User';
-//import mysqlDataSource from '../../data-source';
 import { makeWhereOptions, throwError } from './utils';
 import { FilterFields } from '../types';
 import { genSalt, hash } from 'bcrypt';
 import { iUserService } from '../UserService';
+import { dataSource } from '../../plugins/autoload/dataSource';
 
 export class UserService implements iUserService {
   private repository: Repository<User>;
   constructor(repository?: Repository<User>) {
-    this.repository = repository// ? repository : mysqlDataSource.getRepository(User);
+    this.repository = repository ? repository : dataSource.getRepository(User);
   }
 
   findByPageAndSizeAndFilterAndOrder = async (page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[User[], number]> => {

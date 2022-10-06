@@ -1,15 +1,33 @@
-import { FastifyPluginAsync } from 'fastify'
+import { FastifyInstance, FastifyPluginAsync } from 'fastify'
+import CategoryHandler from '../../../handlers/category-handler'
+import hasRight from '../../../plugins/hasRight'
+import tokenValidator from '../../../plugins/tokenValidator'
+import { categoriesResponse, categoryBodyWithId, categoryBodyWithoutId } from '../../../schemas/category-schema'
+import { CategoryService } from '../../../service/implementation/CategoryService'
 
-const categoryRoutes: FastifyPluginAsync = async (fastify,): Promise<void> => {
-  fastify.get('/', async function (request, reply) {
-    return { categories: 'all' }
+const categoryRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
+  const categoryHandler = new CategoryHandler(new CategoryService);
+  fastify.get('/', {
+    schema: categoriesResponse,
+    handler: categoryHandler.all,
   })
-  .post('/', async function (request, reply) {
-    return { login: 'success' }
+
+  fastify.register(privateCategoryRoutes, { categoryHandler })
+}
+
+const privateCategoryRoutes = async(fastify: FastifyInstance, opts: { categoryHandler: CategoryHandler }) => {
+  await fastify.register(tokenValidator);
+  await fastify.register(hasRight, { appropriateRight: ['siteManager'] });
+
+  fastify.post('/', {
+    schema: categoryBodyWithoutId,
+    handler: opts.categoryHandler.save,
   })
-  .put('/:id', async function (request, reply) {
-    return { signup: 'new account' }
+  .put('/:id', {
+    schema: categoryBodyWithId,
+    handler: opts.categoryHandler.update,
   })
+  
 }
 
 export default categoryRoutes;

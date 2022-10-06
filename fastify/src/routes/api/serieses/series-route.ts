@@ -1,15 +1,12 @@
 import { FastifyInstance, FastifyPluginAsync } from 'fastify'
-import tokenValidator from '../../../handlers/tokenValidator'
+import tokenValidator from '../../../plugins/tokenValidator'
 
-const seriesRoutes: FastifyPluginAsync = async (fastify,): Promise<void> => {
+const seriesRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
   fastify.get('/page/:page', async function (request, reply) {
     return { pages: 'multiple' }
   })
   .get('/:id', async function (request, reply) {
     return { seriesId: true }
-  })
-  .put('/:id', async function (request, reply) {
-    return { signup: 'new account' }
   })
   fastify.register(privateSeriesRoutes);
 }
@@ -17,10 +14,10 @@ const seriesRoutes: FastifyPluginAsync = async (fastify,): Promise<void> => {
 async function privateSeriesRoutes(fastify: FastifyInstance) {
   await fastify.register(tokenValidator);
   fastify.post('/', async (req, res) => {
-    res.send({message: 'yes', actualy: true});
+    return {message: 'yes', actualy: true};
   })
   .put('/:id', async (req, res) => {
-    res.send({message: 'update', actualy: false});
+    return {message: 'update', actualy: false};
   })
 }
 
