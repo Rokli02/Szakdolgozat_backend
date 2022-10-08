@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { Status } from '../../entity/Status';
-import mysqlDataSource from '../../data-source';
+import { mysqlDataSource } from '../../data-source';
 import { iStatusService } from '../StatusService';
 import { throwError } from './utils';
 

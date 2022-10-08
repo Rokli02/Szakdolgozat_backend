@@ -1,8 +1,8 @@
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { NewsFeed } from '../../entity/NewsFeed';
-import mysqlDataSource from '../../data-source';
 import { makeQueryBuilderOrWhere, makeStringOrWhere, throwError } from './utils';
 import { iNewsFeedService } from '../NewsFeedService';
+import { mysqlDataSource } from '../../data-source';
 
 export class NewsFeedService implements iNewsFeedService {
   private repository: Repository<NewsFeed>;

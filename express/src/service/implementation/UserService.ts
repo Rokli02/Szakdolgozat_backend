@@ -1,10 +1,10 @@
 import { FindManyOptions, Repository } from 'typeorm';
 import { User } from '../../entity/User';
-import mysqlDataSource from '../../data-source';
 import { makeWhereOptions, throwError } from './utils';
 import { FilterFields } from '../types';
 import { genSalt, hash } from 'bcrypt';
 import { iUserService } from '../UserService';
+import { mysqlDataSource } from '../../data-source';
 
 export class UserService implements iUserService {
   private repository: Repository<User>;

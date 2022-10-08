@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeo
 import { Series } from './Series';
 
 @Entity()
-@Unique(['season', 'series']) //TODO: test, Talán errorozhat a series miatt!
+@Unique(['season', 'series'])
 export class Season {
   @PrimaryGeneratedColumn()
     id: number;

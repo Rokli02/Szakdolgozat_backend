@@ -1,5 +1,4 @@
 import { Repository } from 'typeorm';
-import mysqlDataSource from '../../data-source';
 import { Role } from '../../entity/Role';
 import { User } from '../../entity/User';
 import { NewUser } from '../types';
@@ -7,6 +6,7 @@ import { genSalt, hash, compare } from 'bcrypt';
 import { sign, verify } from 'jsonwebtoken';
 import { iAuthorizationService } from '../AuthorizationService';
 import { throwError } from './utils';
+import { mysqlDataSource } from '../../data-source';
 
 export class AuthorizationSerivce implements iAuthorizationService {
   private repository: Repository<User>;
@@ -15,12 +15,8 @@ export class AuthorizationSerivce implements iAuthorizationService {
     repository?: Repository<User>,
     roleRepository?: Repository<Role>
   ) {
-    this.repository = repository
-      ? repository
-      : mysqlDataSource.getRepository(User);
-    this.roleRepository = roleRepository
-      ? roleRepository
-      : mysqlDataSource.getRepository(Role);
+    this.repository = repository ? repository : mysqlDataSource.getRepository(User);
+    this.roleRepository = roleRepository ? roleRepository : mysqlDataSource.getRepository(Role);
   }
 
   findAllRole = async (): Promise<Role[]> => {

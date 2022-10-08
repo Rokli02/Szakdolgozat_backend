@@ -11,8 +11,7 @@ export type NewUser = {
 }
 
 export type ActionSeparatedSeason = {
-  saveSeasons: Season[];
-  updateSeasons: Season[];
+  saveOrUpdateSeasons: Season[];
   deleteSeasons: number[];
 }
 

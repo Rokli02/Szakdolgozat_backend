@@ -31,12 +31,12 @@ export class Series {
   newsfeeds: NewsFeed[];
 
   @OneToMany(() => Season, season => season.series, {
-    cascade: ['insert', 'update']
+    cascade: ['insert', 'update'],
+    onUpdate: 'CASCADE'
   })
   seasons: Season[]
 
   @ManyToMany(() => Category, category => category.serieses, {
-    onUpdate: 'CASCADE',
     cascade: true
   })
   @JoinTable()

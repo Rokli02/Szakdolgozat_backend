@@ -1,6 +1,6 @@
 import { In, Repository } from 'typeorm';
 import { Season } from '../../entity/Season';
-import mysqlDataSource from '../../data-source';
+import { mysqlDataSource } from '../../data-source';
 import { iSeasonService } from '../SeasonService';
 import { throwError } from './utils';
 

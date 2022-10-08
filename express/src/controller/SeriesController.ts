@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Series } from '../entity/Series';
 import { iSeriesService } from '../service/SeriesService';
+import { SeriesUpdateDto } from '../service/types';
 
 export class SeriesController {
   private service: iSeriesService;
@@ -43,7 +44,7 @@ export class SeriesController {
     }
   }
 
-  update = async (req: Request<{ id: number }, any, Series>, res: Response, next: NextFunction) => {
+  update = async (req: Request<{ id: number }, any, SeriesUpdateDto>, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     try {

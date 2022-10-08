@@ -1,8 +1,8 @@
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { UserSeries } from '../../entity/UserSeries';
-import mysqlDataSource from '../../data-source';
 import { makeStringOrWhere, throwError } from './utils';
 import { iUserSeriesService } from '../UserSeriesService';
+import { mysqlDataSource } from '../../data-source';
 
 export class UserSeriesService implements iUserSeriesService {
   private repository: Repository<UserSeries>;

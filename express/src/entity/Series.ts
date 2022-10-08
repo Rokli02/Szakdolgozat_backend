@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Category } from './Category';
 import { NewsFeed } from './NewsFeed';
 import { Season } from './Season';
@@ -31,15 +31,13 @@ export class Series {
   newsfeeds: NewsFeed[];
 
   @OneToMany(() => Season, season => season.series, {
-    //eager: true,
-    cascade: ['insert', 'update']
+    cascade: ['insert', 'update'],
+    onUpdate: 'CASCADE'
   })
   seasons: Season[]
 
   @ManyToMany(() => Category, category => category.serieses, {
-    //eager: true,
-    onUpdate: 'CASCADE'
-    //cascade: true //Talán kell ez ide, de nem biztos
+    cascade: true
   })
   @JoinTable()
   categories: Category[]

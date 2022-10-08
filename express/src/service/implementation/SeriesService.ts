@@ -1,10 +1,11 @@
 import { In, Repository, SelectQueryBuilder } from 'typeorm';
 import { Series } from '../../entity/Series';
-import mysqlDataSource from '../../data-source';
 import { makeQueryBuilderOrWhere, throwError } from './utils';
-import { ActionSeparatedSeason } from '../types';
+import { ActionSeparatedSeason, CategoryDto, SeriesUpdateDto } from '../types';
 import { iSeriesService } from '../SeriesService';
 import { Season } from '../../entity/Season';
+import { mysqlDataSource } from '../../data-source';
+import { Category } from '../../entity/Category';
 
 export class SeriesService implements iSeriesService {
   private repository: Repository<Series>;
@@ -84,18 +85,123 @@ export class SeriesService implements iSeriesService {
     return savedSeries;
   };
 
-  update = async (id: number, entity: Series): Promise<boolean> => {
+  update = async (id: number, entity: SeriesUpdateDto): Promise<boolean> => {
     const createdSeries = this.repository.create(entity);
     if(!createdSeries) {
       throwError('400', 'No series is given to update!');
     }
-    createdSeries.id = id;
+    createdSeries.id = Number(id);
 
-    const dbSeries = await this.repository.findOneBy({id: id});
+    const dbSeries = await this.repository.findOne({
+      where: { id: id },
+      relations: ['seasons', 'categories']
+    });
     if(!dbSeries) {
       throwError('400', `There is no series with id ${id}!`);
     }
 
+    //Évad műveletek
+    if(createdSeries.seasons) {
+      createdSeries.seasons = await this.makeSeasons(entity, createdSeries.id, createdSeries.seasons);
+    }
+
+    if(!createdSeries.seasons || createdSeries.seasons.length < 1) {
+      delete createdSeries.seasons;
+    }
+
+    //Kategória műveletek
+    if(createdSeries.categories && createdSeries.categories.length > 0) {
+      const removableCategoriesMap = this.getRemovableCategories(entity.categories);
+      const categoriesMap = this.makeMapFromArray<Category>(dbSeries.categories);
+  
+      for(let category of createdSeries.categories) {
+        categoriesMap.set(category.id, category);
+      }
+      createdSeries.categories = [];
+      categoriesMap.forEach((value, id) => {
+        if(!removableCategoriesMap.get(id)){
+          createdSeries.categories.push({ id } as Category);
+        }
+      });
+    }
+
+    if(!createdSeries.categories || createdSeries.categories.length < 1) {
+      delete createdSeries.categories;
+    }
+    
+    // Frissítés
+    const updatedSeries = await this.repository.save(createdSeries);
+    console.log("updatedSeries: ");
+    console.log(updatedSeries);
+    if(!updatedSeries) {
+      throwError('400', 'Couldn\'t update series!');
+    }
+
+    return true;
+  };
+
+  private deleteSeasons = async (deleteSeasons: number[]) => {
+    if(deleteSeasons.length > 0) {
+      const result = await this.seasonRepository.delete(deleteSeasons);
+      if(!result || result.affected < 1) {
+        throwError('400', 'Some problem occured during deleting seasons!');
+      }
+    }
+  }
+
+  private makeActionSeparatedSeasons = async (seasons: Season[]): Promise<ActionSeparatedSeason> => {
+    const actionSeasons: ActionSeparatedSeason = {deleteSeasons: [], saveOrUpdateSeasons: []};
+    if(!seasons || seasons.length < 1) {
+      return actionSeasons;
+    }
+
+    for(const season of seasons) {
+      //season.series = createdSeries;
+      if(!season.season && !season.episode && season.id) {
+        actionSeasons.deleteSeasons.push(season.id);
+        continue;
+      }
+
+      if(((season.season || season.episode) && season.id) || (season.season && season.episode && !season.id)) {
+        actionSeasons.saveOrUpdateSeasons.push(season);
+        continue;
+      }
+
+      throwError('400', 'Some problem occured during calculation of season updates!');
+    }
+
+    return actionSeasons
+  }
+
+  private makeMapFromArray = <TYPE>(list: any[]): Map<number, TYPE> => {
+    const map: Map<number, TYPE> = new Map<number, TYPE>();
+    if(!list || list.length < 1) {
+      return map;
+    }
+
+    for(let item of list) {
+      map.set(item.id, item);
+    }
+
+    return map;
+  }
+
+  private getRemovableCategories = (categories: CategoryDto[]): Map<number, boolean> => {
+    const removableCategoriesMap: Map<number, boolean> = new Map<number, boolean>();
+    if(!categories || categories.length < 1) {
+      return removableCategoriesMap
+    }
+
+    categories.forEach(category => {
+      if(category.remove){
+        removableCategoriesMap.set(category.id, true);
+      }
+    });
+
+    return removableCategoriesMap;
+  }
+
+  private makeSeasons = async (entity: SeriesUpdateDto, id: number, seasons: Season[]): Promise<Season[] | undefined> => {
     //Season ID-t kell ellenőrizni, hogy az tényleg a mi sorozatunkhoz tartozik-e!
     const seasonIds = entity.seasons.map(s => s?.id).filter(s => s);
     const dbSeasons = await this.seasonRepository.findBy({
@@ -106,59 +212,16 @@ export class SeriesService implements iSeriesService {
     });
 
     if(dbSeasons.length !== seasonIds.length) {
-      throwError('400', 'Can\'t update series, because of the gives seasons!');
+      throwError('400', 'Can\'t update series, because of the given seasons!');
     }
 
-    const actionSeasons: ActionSeparatedSeason = {deleteSeasons: [], saveSeasons: [], updateSeasons: []};
-    for(const season of createdSeries.seasons) {
-      season.series = createdSeries;
-      if(!season.season && !season.episode && season.id) {
-        actionSeasons.deleteSeasons.push(season.id);
-        continue;
-      }
-
-      if((season.season || season.episode) && season.id) {
-        actionSeasons.updateSeasons.push(season);
-        continue;
-      }
-
-      if(season.season && season.episode && !season.id) {
-        actionSeasons.saveSeasons.push(season);
-        continue;
-      }
-
-      throwError('400', 'Some problem occured during calculation of season updates!');
-    }
-    createdSeries.seasons = undefined;
-
-    //season műveletek
-    if(actionSeasons.deleteSeasons.length > 0) {
-      const result = await this.seasonRepository.delete(actionSeasons.deleteSeasons);
-      if(!result || result.affected < 1) {
-        throwError('400', 'Some problem occured during deleting seasons!');
-      }
-    }
-    if(actionSeasons.updateSeasons.length > 0) {
-      //Talán le kell kérdezni az adatbázisba levő adatokat
-      const result = await this.seasonRepository.save(actionSeasons.updateSeasons);
-      if(!result || result.length < 1) {
-        throwError('400', 'Some problem occured during updating seasons!');
-      }
-    }
-    if(actionSeasons.saveSeasons.length > 0) {
-      const result = await this.seasonRepository.save(actionSeasons.saveSeasons);
-      if(!result || result.length < 1) {
-        throwError('400', 'Some problem occured during saving seasons!');
-      }
+    const actionSeasons: ActionSeparatedSeason = await this.makeActionSeparatedSeasons(seasons);
+    
+    await this.deleteSeasons(actionSeasons.deleteSeasons);
+    if(actionSeasons.saveOrUpdateSeasons.length > 0) {
+      return actionSeasons.saveOrUpdateSeasons;
     }
 
-    const updatedSeries = await this.repository.update({id: id}, createdSeries);
-    console.log("updatedSeries: ");
-    console.log(updatedSeries);
-    if(!updatedSeries || updatedSeries.affected < 1) {
-      throwError('400', 'Couldn\'t update series!');
-    }
-
-    return true;
-  };
+    return undefined;
+  }
 }

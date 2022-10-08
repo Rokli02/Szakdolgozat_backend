@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { Category } from '../../entity/Category';
-import mysqlDataSource from '../../data-source';
+import { mysqlDataSource } from '../../data-source';
 import { iCategoryService } from '../CategoryService';
 import { throwError } from './utils';
 
