@@ -7,7 +7,7 @@ import { UserSeries } from './UserSeries';
 @Entity()
 export class Series {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id: number;
 
   @Column({ nullable: false })
   title: string;
@@ -36,9 +36,8 @@ export class Series {
   seasons: Season[]
 
   @ManyToMany(() => Category, category => category.serieses, {
-    //eager: true,
-    onUpdate: 'CASCADE'
-    //cascade: true //Talán kell ez ide, de nem biztos
+    onUpdate: 'CASCADE',
+    cascade: true
   })
   @JoinTable()
   categories: Category[]

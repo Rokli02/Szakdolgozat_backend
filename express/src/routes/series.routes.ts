@@ -11,14 +11,14 @@ export const seriesRoutes = () => {
   const auth = new AuthorizationController(new AuthorizationSerivce());
   
   //Public
-  router.get("/page/:page", hasValidPageAndSize,  seriesController.allSeries);
-  router.get("/:id", hasValidIdParameter, seriesController.oneSeries);
+  router.get("/page/:page", hasValidPageAndSize,  seriesController.all);
+  router.get("/:id", hasValidIdParameter, seriesController.one);
 
   //Protected
   router.use(auth.verifyToken, auth.hasSiteManagerRight);
   
-  router.post("/", seriesController.saveSeries);
-  router.put("/:id", hasValidIdParameter, seriesController.updateSeries);
+  router.post("/", seriesController.save);
+  router.put("/:id", hasValidIdParameter, seriesController.update);
 
   return router;
 }

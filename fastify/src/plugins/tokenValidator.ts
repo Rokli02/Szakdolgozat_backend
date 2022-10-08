@@ -8,15 +8,15 @@ import { errorHandler } from '../handlers/errorHandler';
 export default fp(async (fastify: FastifyInstance) => {
   const authService: iAuthorizationService = new AuthorizationSerivce();
   
-  fastify.addHook('preHandler', async (req: FastifyRequest<{Headers: { Authorization?: string }}>, res: FastifyReply, done: HookHandlerDoneFunction) => {
-    const { Authorization } = req.headers;
-    if(!Authorization) {
+  fastify.addHook('preHandler', async (req: FastifyRequest<{Headers: { authorization?: string }}>, res: FastifyReply) => {
+    const { authorization } = req.headers;
+    if(!authorization) {
       return res.status(401).send({ message: 'You must login first!' });
     }
 
     try {
-      const user = await authService.verifyUserToken(Authorization);
-      fastify.user = user;
+      const user = await authService.verifyUserToken(authorization);
+      req.user = user;
     } catch(err) {
       return errorHandler(res, err);
     }

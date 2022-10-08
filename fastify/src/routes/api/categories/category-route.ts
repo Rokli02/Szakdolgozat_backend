@@ -17,7 +17,7 @@ const categoryRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Pro
 
 const privateCategoryRoutes = async(fastify: FastifyInstance, opts: { categoryHandler: CategoryHandler }) => {
   await fastify.register(tokenValidator);
-  await fastify.register(hasRight, { appropriateRight: ['siteManager'] });
+  await fastify.register(hasRight, { appropriateRight: ['siteManager', 'admin'] });
 
   fastify.post('/', {
     schema: categoryBodyWithoutId,

@@ -4,7 +4,7 @@ import { Series } from './Series';
 @Entity()
 export class NewsFeed {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id: number;
 
   @Column({ nullable: false })
   title: string;

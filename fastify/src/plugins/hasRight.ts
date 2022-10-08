@@ -2,15 +2,15 @@ import { FastifyInstance, FastifyRegisterOptions, FastifyReply, FastifyRequest, 
 import fp from 'fastify-plugin';
 
 export default fp(async (fastify: FastifyInstance, opts: { appropriateRight: string[] }) => {
-  fastify.addHook('preHandler', async (req: FastifyRequest, res: FastifyReply, done: HookHandlerDoneFunction) => {
-    if(!fastify.user) {
-      return res.status(401).send({ message: 'You must login first!' });
+  fastify.addHook('preHandler', async (req: FastifyRequest, res: FastifyReply) => {
+    if(!req.user) {
+      return res.status(401).send({ message: 'You have to login first!' });
     }
 
-    const ownedRight = fastify.user.role.name;
+    const ownedRight = req.user.role.name;
     for(let right of opts.appropriateRight) {
       if(right === ownedRight) {
-        return done();
+        return;
       }
     }
     return res.status(403).send({ message: 'You don\'t have permission to access this!' });

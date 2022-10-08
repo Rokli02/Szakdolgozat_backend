@@ -30,7 +30,7 @@ app.listen({ port: PORT},(err, address) => {
 });
 
 declare module 'fastify' {
-  interface FastifyInstance {
+  interface FastifyRequest {
     user: User;
   }
 }

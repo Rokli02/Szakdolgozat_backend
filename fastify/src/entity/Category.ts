@@ -4,7 +4,7 @@ import { Series } from './Series';
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id: number;
 
   @Column({ nullable: false })
   name: string;

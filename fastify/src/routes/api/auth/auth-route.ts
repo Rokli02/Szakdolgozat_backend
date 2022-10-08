@@ -1,14 +1,21 @@
 import { FastifyPluginAsync } from 'fastify'
+import AuthHandler from '../../../handlers/auth-handler'
+import { allRoleSchema, loginSchema, signUpSchema } from '../../../schemas/auth-schema';
+import { AuthorizationSerivce } from '../../../service/implementation/AuthorizationService'
 
 const authRoutes: FastifyPluginAsync = async (fastify,): Promise<void> => {
-  fastify.get('/roles', async function (request, reply) {
-    return { roles: true }
+  const authHandler: AuthHandler = new AuthHandler(new AuthorizationSerivce());
+  fastify.get('/roles', {
+    schema: allRoleSchema,
+    handler: authHandler.allRole
   })
-  .post('/login', async function (request, reply) {
-    return { login: 'success' }
+  .post('/login', {
+    schema: loginSchema,
+    handler: authHandler.login
   })
-  .post('/signup', async function (request, reply) {
-    return { signup: 'new account' }
+  .post('/signup', {
+    schema: signUpSchema,
+    handler: authHandler.signup
   })
 }
 

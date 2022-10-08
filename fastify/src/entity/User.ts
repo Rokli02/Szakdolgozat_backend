@@ -6,7 +6,7 @@ import { Role } from './Role';
 @Unique(['email'])
 export class User {
     @PrimaryGeneratedColumn()
-    id?: number;
+    id: number;
 
     @Column({ nullable: false })
     name: string;
@@ -21,7 +21,7 @@ export class User {
     email: string;
 
     @Column({ nullable: false })
-    password?: string;
+    password: string;
 
     @Column({ type: 'boolean', default: true })
     active: boolean;

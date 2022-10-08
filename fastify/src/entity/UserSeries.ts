@@ -7,18 +7,18 @@ import { User } from './User';
 @Unique(['user', 'series'])
 export class UserSeries {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id: number;
 
   @ManyToOne(() => User, {
     nullable: false,
     onDelete: 'CASCADE'
   })
-  user?: User;
+  user: User;
 
   @ManyToOne(() => Series, {
     nullable: false
   })
-  series?: Series;
+  series: Series;
 
   @ManyToOne(() => Status, {
     nullable: false

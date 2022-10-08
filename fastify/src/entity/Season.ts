@@ -5,7 +5,7 @@ import { Series } from './Series';
 @Unique(['season', 'series']) //TODO: test, Talán errorozhat a series miatt!
 export class Season {
   @PrimaryGeneratedColumn()
-    id?: number;
+    id: number;
 
     @Column({ nullable: false })
     season: number;
