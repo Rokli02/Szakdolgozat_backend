@@ -3,6 +3,7 @@ import { UserSeries } from '../../entity/UserSeries';
 import { makeStringOrWhere, throwError } from './utils';
 import { iUserSeriesService } from '../UserSeriesService';
 import { mysqlDataSource } from '../../data-source';
+import { User } from '../../entity/User';
 
 export class UserSeriesService implements iUserSeriesService {
   private repository: Repository<UserSeries>;
@@ -62,9 +63,12 @@ export class UserSeriesService implements iUserSeriesService {
   };
 
   findOne = async (userId: number, seriesId: number): Promise<UserSeries> => {
-    const userSeries = await this.repository.findOneBy({
-      user: { id: userId },
-      series: { id: seriesId },
+    const userSeries = await this.repository.findOne({
+      where: {
+        user: { id: userId },
+        series: { id: seriesId },
+      },
+      relations: ['series', 'series.seasons', 'series.categories', 'status']
     });
     if(!userSeries) {
       throwError('404', `There is no userSeries, with userId ${userId} and seriesId ${seriesId}`);
@@ -83,12 +87,15 @@ export class UserSeriesService implements iUserSeriesService {
     if(!userId || !createdUserSeries.series) {
       throwError('400', 'No user or series is given to save!');
     }
-    createdUserSeries.user.id = userId;
+    createdUserSeries.user = { id: userId} as User;
     
-    const dbUserSeries = await this.repository.findOneBy({
-      user: { id: createdUserSeries.user?.id },
-      series: { id: createdUserSeries.series?.id },
-    })
+    const dbUserSeries = await this.repository.findOne({
+      where: {
+        user: { id: createdUserSeries.user?.id },
+        series: { id: createdUserSeries.series?.id },
+      },
+      relations: ['series', 'series.seasons', 'series.categories', 'status']
+    });
     if(dbUserSeries) {
       throwError('400', 'Userseries with the given userId and seriesId already exists!');
     }
@@ -109,9 +116,12 @@ export class UserSeriesService implements iUserSeriesService {
     createdUserSeries.user = undefined;
     createdUserSeries.series = undefined;
 
-    const dbUserSeries = await this.repository.findOneBy({
-      user: { id: userId },
-      series: { id: seriesId }
+    const dbUserSeries = await this.repository.findOne({
+      where: {
+        user: { id: userId },
+        series: { id: seriesId },
+      },
+      relations: ['series', 'series.seasons', 'series.categories', 'status']
     });
     if(!dbUserSeries) {
       throwError('404', `User with id ${userId}, doesn't have series with id ${seriesId}!`);

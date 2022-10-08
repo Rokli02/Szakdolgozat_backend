@@ -1,3 +1,5 @@
+import { FastifySchema } from 'fastify'
+
 export const idSchema = {
   type: 'object',
   properties: {
@@ -29,4 +31,11 @@ export const pageParamsSchema = {
     page: { type: 'integer' },
   },
   required: ['page']
+}
+
+export const response200WithIdSchema: FastifySchema = {
+  params: idSchema,
+  response: {
+    200: messageSchema
+  }
 }

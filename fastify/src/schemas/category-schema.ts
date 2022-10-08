@@ -1,6 +1,6 @@
 import { FastifySchema } from 'fastify';
 
-const categoryWithId = {
+export const categoryWithId = {
   type: 'object',
   properties: {
     id: { type: 'integer' },

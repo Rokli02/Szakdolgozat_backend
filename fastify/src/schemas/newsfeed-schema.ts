@@ -36,6 +36,11 @@ export const allNewsFeedSchema: FastifySchema = {
   }
 }
 
+export const updateNewsFeedSchema: FastifySchema = {
+  params: idSchema,
+  body: newsfeedSchema,
+}
+
 export const oneNewsFeedSchema: FastifySchema = {
   params: idSchema,
   response: {
@@ -51,12 +56,5 @@ export const oneNewsFeedSchema: FastifySchema = {
 export const response201Schema: FastifySchema = {
   response: {
     201: messageSchema
-  }
-}
-
-export const response200WithIdSchema: FastifySchema = {
-  params: idSchema,
-  response: {
-    200: messageSchema
   }
 }

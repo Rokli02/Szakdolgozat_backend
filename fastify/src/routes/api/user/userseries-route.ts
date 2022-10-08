@@ -1,29 +1,40 @@
-import { FastifyInstance, FastifyPluginAsync } from 'fastify'
+import { FastifyInstance, FastifyPluginAsync, RegisterOptions } from 'fastify'
+import { UserSeriesHandler } from '../../../handlers/userseries-handler';
 import hasRight from '../../../plugins/hasRight';
 import tokenValidator from '../../../plugins/tokenValidator'
+import { response200WithIdSchema } from '../../../schemas/schemes';
+import { allUserseriesSchema, oneUserseriesSchema, saveUserseriesSchema, updateUserseriesSchema } from '../../../schemas/userseries-schema';
+import { UserSeriesService } from '../../../service/implementation/UserSeriesService';
 
 const userSeriesRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
-  fastify.register(privateUserSeriesRoutes, { prefix: '/series'});
+  const userSeriesHandler: UserSeriesHandler = new UserSeriesHandler(new UserSeriesService());
+
+  fastify.register(privateUserSeriesRoutes, { prefix: '/series', userSeriesHandler});
 }
 
-const privateUserSeriesRoutes = async (fastify: FastifyInstance) => {
+const privateUserSeriesRoutes = async (fastify: FastifyInstance, { userSeriesHandler }: { userSeriesHandler: UserSeriesHandler } & RegisterOptions) => {
   await fastify.register(tokenValidator);
   await fastify.register(hasRight, { appropriateRight: ['user'] });
 
-  fastify.get('/page/:page', async function (request, reply) {
-    return { pages: { size: 10, pageNum: 1, serieses: 'many'} }
+  fastify.get('/page/:page', {
+    schema: allUserseriesSchema,
+    handler: userSeriesHandler.all
   })
-  .get('/:id', async function (request, reply) {
-    return { user: { id: 'yes' } }
+  .get('/:id', {
+    schema: oneUserseriesSchema,
+    handler: userSeriesHandler.one
   })
-  .post('/', async function (request, reply) {
-    return { update: 'do' }
+  .post('/', {
+    schema: saveUserseriesSchema,
+    handler: userSeriesHandler.save
   })
-  .put('/:id', async function (request, reply) {
-    return { update: 'do' }
+  .put('/:id', {
+    schema: updateUserseriesSchema,
+    handler: userSeriesHandler.update
   })
-  .delete('/:id', async function (request, reply) {
-    return { delete: { id: null } }
+  .delete('/:id', {
+    schema: response200WithIdSchema,
+    handler: userSeriesHandler.remove
   })
 }
 
