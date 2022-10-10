@@ -45,8 +45,6 @@ export class SeasonService implements iSeasonService {
     }
     
     const updatedSeason = await this.repository.update({id: id}, createdSeason);
-    console.log("updatedSeason: ");
-    console.log(updatedSeason);
     if(!updatedSeason || updatedSeason.affected < 1) {
       throwError('400', 'Couldn\'t update season!');
     }
@@ -70,14 +68,6 @@ export class SeasonService implements iSeasonService {
     if(!savedSeasons || savedSeasons.length < 0) {
       throwError('400', 'Couldn\'t update seasons!');
     }
-    // for(const season of createdSeason) {
-    //   const updatedSeason = await this.repository.update({id: season.id}, season);
-    //   console.log("updatedSeason: ");
-    //   console.log(updatedSeason);
-    //   if(!updatedSeason || updatedSeason.affected < 1) {
-    //     throwError('400', `Couldn\'t update season with id ${season.id}!`);
-    //   }
-    // }
     
     return true;
   }
@@ -94,7 +84,6 @@ export class SeasonService implements iSeasonService {
   removeMultiple = async (ids: number[]): Promise<number[]> => {
     const removedSeason = await this.repository.delete(ids);
     if(!removedSeason || removedSeason.affected < 1) {
-      console.log(removedSeason);
       throwError('400', 'Couldn\'t remove season!');
     }
 

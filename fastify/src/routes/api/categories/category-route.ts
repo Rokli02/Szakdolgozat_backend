@@ -15,17 +15,17 @@ const categoryRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Pro
   fastify.register(privateCategoryRoutes, { categoryHandler })
 }
 
-const privateCategoryRoutes = async(fastify: FastifyInstance, opts: { categoryHandler: CategoryHandler }) => {
+const privateCategoryRoutes = async(fastify: FastifyInstance, { categoryHandler }: { categoryHandler: CategoryHandler }) => {
   await fastify.register(tokenValidator);
   await fastify.register(hasRight, { appropriateRight: ['siteManager', 'admin'] });
 
   fastify.post('/', {
     schema: categoryBodyWithoutId,
-    handler: opts.categoryHandler.save,
+    handler: categoryHandler.save,
   })
   .put('/:id', {
     schema: categoryBodyWithId,
-    handler: opts.categoryHandler.update,
+    handler: categoryHandler.update,
   })
   
 }

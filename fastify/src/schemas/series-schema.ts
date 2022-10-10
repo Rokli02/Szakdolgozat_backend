@@ -61,13 +61,13 @@ const seriesSchemaInUpdate = {
       type: 'array',
       items: removableCategorySchema
     }
-  }
+  },
+  required: []
 }
 
 const seriesSchemaInSave = {
   type: 'object',
   properties: {
-    id: { type: 'integer' },
     title: { type: 'string' },
     prodYear: { type: 'integer' },
     ageLimit: { type: 'integer' },
@@ -80,7 +80,8 @@ const seriesSchemaInSave = {
       type: 'array',
       items: saveCategorySchema
     }
-  }
+  },
+  required: ['title', 'prodYear', 'ageLimit', 'length']
 }
 
 export const allSeriesSchema: FastifySchema = {

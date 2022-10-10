@@ -51,7 +51,8 @@ export const loginSchema: FastifySchema = {
     properties: {
       usernameOrEmail: { type: 'string' },
       password: { type: 'string' }
-    }
+    },
+    required: ['usernameOrEmail', 'password']
   },
   response: {
     200: {

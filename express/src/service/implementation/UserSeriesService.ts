@@ -83,7 +83,6 @@ export class UserSeriesService implements iUserSeriesService {
       throwError('400', 'No userseries is given to save!');
     }
     
-    console.log(createdUserSeries);
     if(!userId || !createdUserSeries.series) {
       throwError('400', 'No user or series is given to save!');
     }

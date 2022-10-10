@@ -118,8 +118,6 @@ export class NewsFeedService implements iNewsFeedService {
     }
 
     const updatedNewsFeed = await this.repository.update({id}, createdNewsFeed);
-    console.log("updatedNewsFeed: ");
-    console.log(updatedNewsFeed);
     if(!updatedNewsFeed || updatedNewsFeed.affected < 1) {
       throwError('400', 'Couldn\'t update category!');
     }

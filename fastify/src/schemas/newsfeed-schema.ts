@@ -8,12 +8,22 @@ const seriesSchema = {
     title: { type: 'string' },
   }
 }
-const newsfeedSchema = {
+const getNewsfeedSchema = {
   type: 'object',
   properties: {
     id: { type: 'integer' },
     title: { type: 'string' },
     description: { type: 'string' },
+    modification: { type: 'string' },
+    series: seriesSchema
+  }
+}
+
+const saveNewsfeedSchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'integer' },
+    title: { type: 'string' },
     modification: { type: 'string' },
     series: seriesSchema
   }
@@ -28,7 +38,7 @@ export const allNewsFeedSchema: FastifySchema = {
       properties: {
         newsfeeds: {
           type: 'array',
-          items: newsfeedSchema
+          items: getNewsfeedSchema
         },
         count: { type: 'integer' }
       }
@@ -38,7 +48,7 @@ export const allNewsFeedSchema: FastifySchema = {
 
 export const updateNewsFeedSchema: FastifySchema = {
   params: idSchema,
-  body: newsfeedSchema,
+  body: saveNewsfeedSchema,
 }
 
 export const oneNewsFeedSchema: FastifySchema = {
@@ -47,14 +57,21 @@ export const oneNewsFeedSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        newsfeed: newsfeedSchema
+        newsfeed: getNewsfeedSchema
       }
     }
   }
 }
 
-export const response201Schema: FastifySchema = {
+export const saveNewsFeedSchema: FastifySchema = {
+  body: saveNewsfeedSchema,
   response: {
-    201: messageSchema
+    201: {
+      type: 'object',
+      properties: {
+        newsfeed: getNewsfeedSchema
+      },
+      required: ['title', 'description']
+    }
   }
 }

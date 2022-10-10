@@ -62,7 +62,8 @@ export const saveUserseriesSchema: FastifySchema = {
       type: 'object',
       properties: {
         series: userseriesSchema
-      }
+      },
+      required: ['series', 'status']
     }
   }
 }

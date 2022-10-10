@@ -4,6 +4,7 @@ import { CategoryController } from '../controller/CategoryController';
 import { hasValidIdParameter } from '../controller/ValidationController';
 import { AuthorizationSerivce } from '../service/implementation/AuthorizationService';
 import { CategoryService } from '../service/implementation/CategoryService';
+import { categoryFieldsRequired } from '../validation/misc-validation';
 
 export const categoryRoutes = () => {
   const router = Router();
@@ -16,8 +17,8 @@ export const categoryRoutes = () => {
   //Private
   router.use(auth.verifyToken, auth.hasSiteManagerRight);
 
-  router.post('/', categoryController.save);
-  router.put('/:id', hasValidIdParameter, categoryController.update);
+  router.post('/', categoryFieldsRequired, categoryController.save);
+  router.put('/:id', hasValidIdParameter, categoryFieldsRequired, categoryController.update);
 
   return router;
 }

@@ -4,6 +4,7 @@ import { NewsFeedController } from '../controller/NewsFeedController';
 import { hasValidIdParameter, hasValidPageAndSize } from '../controller/ValidationController';
 import { AuthorizationSerivce } from '../service/implementation/AuthorizationService';
 import { NewsFeedService } from '../service/implementation/NewsfeedService';
+import { newfeedFieldsRequired, newsfeedFieldsValid } from '../validation/newsfeed-validation';
 
 export const newsfeedRoutes = () => {
   const router = Router();
@@ -35,8 +36,8 @@ const privateSiteManagerRoutes = (newsfeedController: NewsFeedController) => {
   const auth = new AuthorizationController(new AuthorizationSerivce());
   router.use(auth.verifyToken, auth.hasSiteManagerRight);
 
-  router.post('/', newsfeedController.save);
-  router.put('/:id', hasValidIdParameter, newsfeedController.update);
+  router.post('/', newfeedFieldsRequired, newsfeedFieldsValid, newsfeedController.save);
+  router.put('/:id', hasValidIdParameter, newsfeedFieldsValid, newsfeedController.update);
   router.delete('/:id', hasValidIdParameter, newsfeedController.remove);
 
   return router;

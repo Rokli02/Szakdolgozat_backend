@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyPluginAsync } from 'fastify'
 import { UserHandler } from '../../../handlers/user-handler';
+import { validateUserFields } from '../../../handlers/validation-handler';
 import hasRight from '../../../plugins/hasRight';
 import tokenValidator from '../../../plugins/tokenValidator'
 import { allUserSchema, deleteUserSchema, oneUserSchema, updateUserSchema } from '../../../schemas/user-schema';
@@ -21,6 +22,7 @@ const userRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Promise
   })
   .put('/:id', {
     schema: updateUserSchema,
+    preHandler: validateUserFields,
     handler: userHandler.update
   })
   .delete('/:id', {

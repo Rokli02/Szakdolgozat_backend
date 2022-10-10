@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyPluginAsync, RegisterOptions } from 'fastify'
 import { UserSeriesHandler } from '../../../handlers/userseries-handler';
+import { validateUserSeriesFields } from '../../../handlers/validation-handler';
 import hasRight from '../../../plugins/hasRight';
 import tokenValidator from '../../../plugins/tokenValidator'
 import { response200WithIdSchema } from '../../../schemas/schemes';
@@ -26,10 +27,12 @@ const privateUserSeriesRoutes = async (fastify: FastifyInstance, { userSeriesHan
   })
   .post('/', {
     schema: saveUserseriesSchema,
+    preHandler: validateUserSeriesFields,
     handler: userSeriesHandler.save
   })
   .put('/:id', {
     schema: updateUserseriesSchema,
+    preHandler: validateUserSeriesFields,
     handler: userSeriesHandler.update
   })
   .delete('/:id', {

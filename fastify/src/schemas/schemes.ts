@@ -4,7 +4,8 @@ export const idSchema = {
   type: 'object',
   properties: {
     id: { type: 'integer' }
-  }
+  },
+  required: ['id']
 }
 
 export const messageSchema = {

@@ -48,7 +48,7 @@ export class SeriesService implements iSeriesService {
     } else {
       query.orderBy('series.id', direction);
     }
-    
+
     return await query.getManyAndCount();
   };
 
@@ -62,7 +62,6 @@ export class SeriesService implements iSeriesService {
         id
       }
     })
-    //const series = await this.repository.findOneBy({id: id});
     if(!series) {
       throwError('404', 'Couldn\'t find series!');
     }
@@ -125,14 +124,9 @@ export class SeriesService implements iSeriesService {
       });
     }
 
-    if(!createdSeries.categories || createdSeries.categories.length < 1) {
-      delete createdSeries.categories;
-    }
     
     // Frissítés
     const updatedSeries = await this.repository.save(createdSeries);
-    console.log("updatedSeries: ");
-    console.log(updatedSeries);
     if(!updatedSeries) {
       throwError('400', 'Couldn\'t update series!');
     }
@@ -156,7 +150,6 @@ export class SeriesService implements iSeriesService {
     }
 
     for(const season of seasons) {
-      //season.series = createdSeries;
       if(!season.season && !season.episode && season.id) {
         actionSeasons.deleteSeasons.push(season.id);
         continue;

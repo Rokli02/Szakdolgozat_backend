@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyPluginAsync } from 'fastify'
 import { SeriesHandler } from '../../../handlers/series-handler'
+import { validateSeriesFields } from '../../../handlers/validation-handler'
 import hasRight from '../../../plugins/hasRight'
 import tokenValidator from '../../../plugins/tokenValidator'
 import { allSeriesSchema, oneSeriesSchema, saveSeriesSchema, updateSeriesSchema } from '../../../schemas/series-schema'
@@ -25,10 +26,12 @@ async function privateSeriesRoutes(fastify: FastifyInstance, { seriesHandler }: 
 
   fastify.post('/', {
     schema: saveSeriesSchema,
+    preHandler: validateSeriesFields,
     handler: seriesHandler.save
   })
   .put('/:id', {
     schema: updateSeriesSchema,
+    preHandler: validateSeriesFields,
     handler: seriesHandler.update
   })
 }

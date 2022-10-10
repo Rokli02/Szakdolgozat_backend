@@ -12,7 +12,6 @@ export default class CategoryHandler {
   all = async (req: FastifyRequest, res: FastifyReply) => {
     try {
       const categories = await this.service.findAll();
-      console.log(categories);
       return { categories };
     } catch(err) {
       return errorHandler(res, err);

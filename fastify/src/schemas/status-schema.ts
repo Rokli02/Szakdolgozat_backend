@@ -6,7 +6,8 @@ export const statusSchema = {
   properties: {
     id: { type: 'integer' },
     name: { type: 'string' }
-  }
+  },
+  required: ['name']
 }
 
 export const allStatusSchema: FastifySchema = {
@@ -26,7 +27,7 @@ export const allStatusSchema: FastifySchema = {
 export const saveStatusSchema: FastifySchema = {
   body: statusSchema,
   response: {
-    200: {
+    201: {
       type: 'object',
       properties: {
         status: statusSchema

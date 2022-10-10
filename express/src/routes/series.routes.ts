@@ -4,6 +4,8 @@ import { SeriesController } from '../controller/SeriesController';
 import { hasValidIdParameter, hasValidPageAndSize } from '../controller/ValidationController';
 import { AuthorizationSerivce } from '../service/implementation/AuthorizationService';
 import { SeriesService } from '../service/implementation/SeriesService';
+import { seriesFieldsRequired } from '../validation/series-validation';
+import { validateSeriesFields } from '../validation/validation-middleware';
 
 export const seriesRoutes = () => {
   const router = Router();
@@ -17,8 +19,8 @@ export const seriesRoutes = () => {
   //Protected
   router.use(auth.verifyToken, auth.hasSiteManagerRight);
   
-  router.post("/", seriesController.save);
-  router.put("/:id", hasValidIdParameter, seriesController.update);
+  router.post("/", seriesFieldsRequired, validateSeriesFields, seriesController.save);
+  router.put("/:id", hasValidIdParameter, validateSeriesFields, seriesController.update);
 
   return router;
 }

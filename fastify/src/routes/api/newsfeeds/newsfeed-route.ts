@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyPluginAsync, FastifyRegisterOptions, RegisterOp
 import NewsFeedHandler from '../../../handlers/newsfeed-handler'
 import hasRight from '../../../plugins/hasRight'
 import tokenValidator from '../../../plugins/tokenValidator'
-import { allNewsFeedSchema, oneNewsFeedSchema, response201Schema, updateNewsFeedSchema } from '../../../schemas/newsfeed-schema'
+import { allNewsFeedSchema, oneNewsFeedSchema, saveNewsFeedSchema, updateNewsFeedSchema } from '../../../schemas/newsfeed-schema'
 import { response200WithIdSchema } from '../../../schemas/schemes'
 import { NewsFeedService } from '../../../service/implementation/NewsfeedService'
 
@@ -36,7 +36,7 @@ async function privateSiteManagerRoutes(fastify: FastifyInstance, { newsfeedHand
   await fastify.register(hasRight, { appropriateRight: ['siteManager', 'admin'] });
 
   fastify.post('/', {
-    schema: response201Schema,
+    schema: saveNewsFeedSchema,
     handler: newsfeedHandler.save
   })
   .put('/:id', {

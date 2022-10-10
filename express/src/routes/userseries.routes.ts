@@ -4,6 +4,7 @@ import { UserSeriesController } from '../controller/UserSeriesController';
 import { hasValidIdParameter, hasValidPageAndSize } from '../controller/ValidationController';
 import { AuthorizationSerivce } from '../service/implementation/AuthorizationService';
 import { UserSeriesService } from '../service/implementation/UserSeriesService';
+import { validateUserSeriesFields } from '../validation/validation-middleware';
 
 export const userSeriesRoutes = () => {
   const router = Router();
@@ -14,8 +15,8 @@ export const userSeriesRoutes = () => {
 
   router.get("/page/:page", hasValidPageAndSize, userseriesController.all);
   router.get("/:id", hasValidIdParameter, userseriesController.one);
-  router.post("/", userseriesController.save); //Validáló metódus
-  router.put("/:id", hasValidIdParameter, userseriesController.update);
+  router.post("/", validateUserSeriesFields, userseriesController.save); //Validáló metódus
+  router.put("/:id", hasValidIdParameter, validateUserSeriesFields, userseriesController.update);
   router.delete("/:id", hasValidIdParameter, userseriesController.remove);
 
   return router;

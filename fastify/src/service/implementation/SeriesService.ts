@@ -131,8 +131,6 @@ export class SeriesService implements iSeriesService {
     
     // Frissítés
     const updatedSeries = await this.repository.save(createdSeries);
-    console.log("updatedSeries: ");
-    console.log(updatedSeries);
     if(!updatedSeries) {
       throwError('400', 'Couldn\'t update series!');
     }

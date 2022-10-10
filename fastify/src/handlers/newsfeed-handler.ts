@@ -46,8 +46,8 @@ export default class NewsFeedHandler {
 
   save = async (req: FastifyRequest<{ Body: NewsFeed }>, res: FastifyReply) => {
     try {
-      await this.service.save(req.body);
-      return res.status(201).send({ message: 'Saved succesfully!' });
+      const newsfeed = await this.service.save(req.body);
+      return res.status(201).send({ newsfeed });
     } catch(err) {
       errorHandler(res, err);
     }
@@ -68,7 +68,6 @@ export default class NewsFeedHandler {
     const { id } = req.params;
 
     try {
-      console.log('enter remove')
         await this.service.remove(id);
         return { message: 'Deleted succesfully!', id: id };
     } catch(err) {
