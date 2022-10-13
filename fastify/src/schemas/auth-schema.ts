@@ -58,7 +58,17 @@ export const loginSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        token: { type: 'string' }
+        token: { type: 'string' },
+        user: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            username: { type: 'string' },
+            email: { type: 'string' },
+            role: roleSchemaWithId,
+            created: { type: 'string' },
+          }
+        }
       }
     }
   }

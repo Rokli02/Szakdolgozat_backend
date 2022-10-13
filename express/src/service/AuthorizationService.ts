@@ -1,15 +1,15 @@
 import { Role } from '../entity/Role';
 import { User } from '../entity/User';
-import { NewUser } from './types';
+import { LoginData, NewUser } from './types';
 
 export interface iAuthorizationService {
   findAllRole(): Promise<Role[]>;
   /**
-   * Ha a megadott paraméter adatokkal sikeresen be lehet jelentkezni, akkor visszatér egy tokennel, különben hibát dob!
+   * Ha a megadott paraméter adatokkal sikeresen be lehet jelentkezni, akkor visszatér egy tokennel és a user adataival, különben hibát dob!
    * @param usernameOrEmail Felhasználói név, vagy email cím
    * @param rawPassword Jelszó
    */
-  login(usernameOrEmail: string, rawPassword: string): Promise<string>;
+  login(usernameOrEmail: string, rawPassword: string): Promise<LoginData>;
   signup(newUser: NewUser): Promise<boolean>;
   /**
    * Megnézi, hogy érvényes-e a token, ha igen visszatér a tokent kiváltó user adataival, különben hibát dob!

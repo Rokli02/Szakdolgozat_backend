@@ -22,8 +22,8 @@ export default class AuthHandler {
     const { usernameOrEmail, password } = req.body;
     
     try {
-      const token = await this.service.login(usernameOrEmail, password);
-      return { token };
+      const { token, user} = await this.service.login(usernameOrEmail, password);
+      return { token, user };
     } catch(err) {
       errorHandler(res, err);
     }

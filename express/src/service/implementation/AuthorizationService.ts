@@ -1,12 +1,12 @@
 import { Repository } from 'typeorm';
+import { mysqlDataSource } from '../../data-source';
 import { Role } from '../../entity/Role';
 import { User } from '../../entity/User';
-import { NewUser } from '../types';
+import { LoginData, NewUser } from '../types';
 import { genSalt, hash, compare } from 'bcrypt';
 import { sign, verify } from 'jsonwebtoken';
 import { iAuthorizationService } from '../AuthorizationService';
 import { throwError } from './utils';
-import { mysqlDataSource } from '../../data-source';
 
 export class AuthorizationSerivce implements iAuthorizationService {
   private repository: Repository<User>;
@@ -26,7 +26,7 @@ export class AuthorizationSerivce implements iAuthorizationService {
   login = async (
     usernameOrEmail: string,
     rawPassword: string
-  ): Promise<string> => {
+  ): Promise<LoginData> => {
     const user = await this.repository.findOneBy([
       {
         email: usernameOrEmail,
@@ -52,8 +52,19 @@ export class AuthorizationSerivce implements iAuthorizationService {
       process.env.JWT_SECRET_KEY,
       { expiresIn: process.env.JWT_EXPIRATION }
     );
+    
+    const loggedInUser: LoginData = {
+      token,
+      user: {
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        created: user.created
+      }
+    }
 
-    return token;
+    return loggedInUser;
   };
 
   signup = async (newUser: NewUser): Promise<boolean> => {

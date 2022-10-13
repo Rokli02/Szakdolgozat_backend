@@ -30,8 +30,8 @@ export class AuthorizationController {
     const { usernameOrEmail, password } = req.body;
     
     try {
-      const token = await this.service.login(usernameOrEmail, password);
-      return res.json({ token });
+      const { token, user } = await this.service.login(usernameOrEmail, password);
+      return res.json({ token, user });
     } catch(err) {
       console.error('Error in login:\n', err);
       return next(err);

@@ -1,3 +1,4 @@
+import { Role } from '../entity/Role';
 import { Season } from '../entity/Season';
 
 export type FilterFields = (string | { name: string, field: string });
@@ -8,6 +9,17 @@ export type NewUser = {
   username: string;
   email: string;
   password: string;
+}
+
+export type LoginData = {
+  token: string,
+  user: {
+    name: string;
+    username: string;
+    email: string;
+    role: Role;
+    created: string;
+  }
 }
 
 export type ActionSeparatedSeason = {
