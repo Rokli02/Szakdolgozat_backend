@@ -12,11 +12,14 @@ import { seriesRoutes } from './routes/series.routes';
 import { newsfeedRoutes } from './routes/newsfeed.routes';
 import { categoryRoutes } from './routes/category.routes';
 import { statusRoutes } from './routes/status.routes';
+import * as cors from 'cors';
 
   const app = express();
   const PORT = process.env.PORT || 5001;
   
   app.use(bodyParser.json());
+  app.use(cors())
+
   app.use('/api/auth', authRoutes());
   app.use('/api/users', userRoutes());
   app.use('/api/user/series', userSeriesRoutes());
@@ -34,5 +37,3 @@ import { statusRoutes } from './routes/status.routes';
   app.listen(PORT, () => {
     console.log(`Express server running on http://localhost:${PORT}!`);
   });
-
-  //TODO: Validation middleware for saving or updating actions
