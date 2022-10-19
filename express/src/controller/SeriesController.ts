@@ -17,7 +17,6 @@ export class SeriesController {
       const serieses = await this.service.findByPageAndSizeAndFilterAndOrder(page, size, filt, ordr, dir);
       return res.json({serieses: serieses[0], count: serieses[1]});
     } catch(err) {
-        console.error('in all series:\n', err);
         next(err);
     }
   }
@@ -27,9 +26,8 @@ export class SeriesController {
 
     try {
       const series = await this.service.findOne(id);
-      return res.json({series});
+      return res.json({ series });
     } catch(err) {
-        console.error('in one series:\n', err);
         next(err);
     }
   }
@@ -37,9 +35,8 @@ export class SeriesController {
   save = async (req: Request<any, any, Series>, res: Response, next: NextFunction) => {
     try {
       const series = await this.service.save(req.body);
-      return res.status(201).json({series});
+      return res.status(201).json({ series });
     } catch(err) {
-        console.error('in save series:\n', err);
         next(err);
     }
   }
@@ -51,7 +48,6 @@ export class SeriesController {
       await this.service.update(id, req.body);
       return res.json({ message: 'Updated succesfully!' });
     } catch(err) {
-        console.error('in update series:\n', err);
         next(err);
     }
   }

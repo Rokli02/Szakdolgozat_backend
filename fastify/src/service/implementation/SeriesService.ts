@@ -62,7 +62,6 @@ export class SeriesService implements iSeriesService {
         id
       }
     })
-    //const series = await this.repository.findOneBy({id: id});
     if(!series) {
       throwError('404', 'Couldn\'t find series!');
     }
@@ -123,10 +122,6 @@ export class SeriesService implements iSeriesService {
           createdSeries.categories.push({ id } as Category);
         }
       });
-    }
-
-    if(!createdSeries.categories || createdSeries.categories.length < 1) {
-      delete createdSeries.categories;
     }
     
     // Frissítés

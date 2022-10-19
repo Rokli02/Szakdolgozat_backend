@@ -1,11 +1,12 @@
 import { FastifySchema } from 'fastify';
-import { idSchema, messageSchema, pageParamsSchema, pageQuerySchema } from './schemes';
+import { idSchema, pageParamsSchema, pageQuerySchema } from './schemes';
 
 const seriesSchema = {
   type: 'object',
   properties: {
     id: { type: 'integer' },
     title: { type: 'string' },
+    prodYear: { type: 'integer' }
   }
 }
 const getNewsfeedSchema = {
@@ -70,8 +71,7 @@ export const saveNewsFeedSchema: FastifySchema = {
       type: 'object',
       properties: {
         newsfeed: getNewsfeedSchema
-      },
-      required: ['title', 'description']
+      }
     }
   }
 }

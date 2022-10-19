@@ -16,7 +16,7 @@ export class UserSeriesController {
     
     try {
         const userserieses = await this.service.findByPageAndSizeAndFilterAndStatusAndOrder(userId, page, size, filt, stat, ordr, dir);
-        res.json({serieses: userserieses[0], count: userserieses[1]});
+        res.json({ serieses: userserieses[0], count: userserieses[1] });
     } catch(err) {
         console.error('in all userseries:\n', err);
         next(err);
@@ -29,9 +29,8 @@ export class UserSeriesController {
 
     try {
         const series = await this.service.findOne(userId, id);
-        return res.json({series});
+        return res.json({ series });
     } catch(err) {
-        console.error('in one userseries:\n', err);
         next(err);
     }
   }
@@ -41,9 +40,8 @@ export class UserSeriesController {
 
     try {
         const series = await this.service.save(userId, req.body);
-        return res.status(201).json({series});
+        return res.status(201).json({ series });
     } catch(err) {
-        console.error('in save userseries:\n', err);
         next(err);
     }
   }
@@ -54,9 +52,8 @@ export class UserSeriesController {
 
     try {
         await this.service.update(userId, id, req.body);
-        return res.status(200).json({ message: 'Updated succesfully!' });
+        return res.json({ message: 'Updated succesfully!' });
     } catch(err) {
-        console.error('in update userseries:\n', err);
         next(err);
     }
   }
@@ -69,7 +66,6 @@ export class UserSeriesController {
         await this.service.remove(userId, id);
         return res.json({ message: 'Deleted succesfully!', id });
     } catch(err) {
-        console.error('in remove user:\n', err);
         next(err);
     }
 }

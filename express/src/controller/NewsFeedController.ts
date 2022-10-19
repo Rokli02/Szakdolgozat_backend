@@ -45,8 +45,8 @@ export class NewsFeedController {
 
   save = async (req: Request<any, any, NewsFeed>, res: Response, next: NextFunction) => {
     try {
-      await this.service.save(req.body);
-      return res.status(201).json({ message: 'Saved succesfully!' });
+      const newsfeed = await this.service.save(req.body);
+      return res.status(201).json({ newsfeed });
     } catch(err) {
       next(err);
     }

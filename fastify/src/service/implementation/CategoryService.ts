@@ -21,6 +21,9 @@ export class CategoryService implements iCategoryService {
       throwError('400', 'No category is given to save!');
     }
     createdCategory.id = undefined;
+    if(createdCategory.serieses) {
+      delete createdCategory.serieses;
+    }
 
     const savedCategory = await this.repository.save(createdCategory);
     if(!savedCategory) {
@@ -36,6 +39,9 @@ export class CategoryService implements iCategoryService {
       throwError('400', 'No category is given to update!');
     }
     createdCategory.id = id;
+    if(createdCategory.serieses) {
+      delete createdCategory.serieses;
+    }
 
     const dbCategory = await this.repository.findOneBy({id: id});
     if(!dbCategory) {

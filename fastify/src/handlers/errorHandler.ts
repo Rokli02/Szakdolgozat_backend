@@ -2,7 +2,6 @@ import { FastifyReply } from 'fastify';
 import { QueryFailedError } from 'typeorm';
 
 export function errorHandler(res: FastifyReply, err: Error) {
-  console.error(err);
   if(!err.name) {
     return res.status(500).send({ message: err, reason: 'Couldn\'t find error name!' })
   }

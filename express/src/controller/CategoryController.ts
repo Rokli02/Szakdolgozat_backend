@@ -13,7 +13,6 @@ export class CategoryController {
       const categories = await this.service.findAll();
       return res.json({categories});
     } catch(err) {
-      console.error('in all category:\n', err);
       next(err);
     }
   }
@@ -23,7 +22,6 @@ export class CategoryController {
       const category = await this.service.save(req.body);
       return res.status(201).json({category});
     } catch(err) {
-      console.error('in save category:\n', err);
       next(err);
     }
   }
@@ -35,7 +33,6 @@ export class CategoryController {
       await this.service.update(id, req.body);
       return res.json({ message: 'Category update is succesful!'});
     } catch(err) {
-      console.error('in update category:\n', err);
       next(err);
     }
   }

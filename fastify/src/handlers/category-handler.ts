@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { Category } from '../entity/Category';
-import { errorHandler } from './errorHandler';
 import { iCategoryService } from '../service/CategoryService';
+import { errorHandler } from './errorHandler';
 
 export default class CategoryHandler {
   private service: iCategoryService;

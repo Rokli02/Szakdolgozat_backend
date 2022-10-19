@@ -21,7 +21,6 @@ export class AuthorizationController {
       const roles = await this.service.findAllRole();
       return res.json(roles);
     } catch(err) {
-      console.error('Error in allRole:\n', err);
       return next(err);
     }
   }
@@ -33,7 +32,6 @@ export class AuthorizationController {
       const { token, user } = await this.service.login(usernameOrEmail, password);
       return res.json({ token, user });
     } catch(err) {
-      console.error('Error in login:\n', err);
       return next(err);
     }
   }
@@ -49,7 +47,6 @@ export class AuthorizationController {
 
       return res.status(201).json({ message: 'Success!' });
     } catch(err) {
-      console.error('Error in sign up:\n', err);
       return next(err);
     }
   }
@@ -65,7 +62,6 @@ export class AuthorizationController {
       req.user = user;
       next();
     } catch(err) {
-      console.error('Error during verify:\n', err);
       return next(err);
     }
   }
