@@ -1,7 +1,6 @@
 import { FastifySchema } from 'fastify';
 import { idSchema, pageParamsSchema } from './schemes';
 import { seriesSchemaOut } from './series-schema';
-import { statusSchema } from './status-schema';
 
 const userseriesSchema = {
   type: 'object',
@@ -10,7 +9,12 @@ const userseriesSchema = {
     season: { type: 'integer' },
     episode: { type: 'integer' },
     series: seriesSchemaOut,
-    status: statusSchema
+    status: { 
+      type: 'object',
+      properties: {
+        id: { type: 'integer' },
+        name: { type: 'string' }
+    }}
   }
 }
 

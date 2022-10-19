@@ -85,14 +85,16 @@ export class UserService implements iUserService {
     }
     createdUser.id = undefined;
 
-    const similarEmaiUser = await this.repository.findOneBy({ email: entity?.email});
-    if(similarEmaiUser) {
-      throwError('400', 'There is already a user with such email!');
-    }
-
     const dbUser = await this.repository.findOneBy({id: id});
     if(!dbUser) {
       throwError('404', `There is no user with id ${id}`);
+    }
+
+    if(entity.email) {
+      const similarEmaiUser = await this.repository.findOneBy({ email: entity?.email});
+      if(similarEmaiUser && similarEmaiUser.id !== dbUser.id) {
+        throwError('400', 'There is already a user with such email!');
+      }
     }
 
     if(createdUser.password) {
