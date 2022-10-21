@@ -6,4 +6,5 @@ export interface iSeriesService {
   findOne(id: number): Promise<Series>;
   save(entity: Series): Promise<Series>;
   update(id: number, entity: SeriesUpdateDto): Promise<boolean>;
+  deleteImage(id: number): Promise<boolean>;
 }

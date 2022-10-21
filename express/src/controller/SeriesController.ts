@@ -51,4 +51,15 @@ export class SeriesController {
         next(err);
     }
   }
+
+  deleteImage = async (req: Request<{ id: number }, any, SeriesUpdateDto>, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+
+    try {
+      await this.service.deleteImage(id);
+      return res.json({ message: 'Deleted image succesfully!' });
+    } catch(err) {
+        next(err);
+    }
+  }
 }

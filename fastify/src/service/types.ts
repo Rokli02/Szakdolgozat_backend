@@ -1,3 +1,4 @@
+import { Image } from '../entity/Image';
 import { Role } from '../entity/Role';
 import { Season } from '../entity/Season';
 
@@ -40,9 +41,16 @@ export type SeriesUpdateDto = {
   length: number;
   seasons: Season[];
   categories: CategoryDto[];
+  image?: Image;
 }
 
 export type ActionSeparatedCategory = {
   addCategories: number[],
   removeCategories: number[],
+}
+
+export type UploadableImage = {
+  name: string;
+  mimeType: string,
+  path: string;
 }

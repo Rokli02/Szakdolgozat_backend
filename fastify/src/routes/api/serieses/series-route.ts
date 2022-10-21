@@ -3,6 +3,7 @@ import { SeriesHandler } from '../../../handlers/series-handler'
 import { validateSeriesFields } from '../../../handlers/validation-handler'
 import hasRight from '../../../plugins/hasRight'
 import tokenValidator from '../../../plugins/tokenValidator'
+import { response200WithIdSchema } from '../../../schemas/schemes'
 import { allSeriesSchema, oneSeriesSchema, saveSeriesSchema, updateSeriesSchema } from '../../../schemas/series-schema'
 import { SeriesService } from '../../../service/implementation/SeriesService'
 
@@ -33,6 +34,10 @@ async function privateSeriesRoutes(fastify: FastifyInstance, { seriesHandler }: 
     schema: updateSeriesSchema,
     preHandler: validateSeriesFields,
     handler: seriesHandler.update
+  })
+  .delete('/image/:id', {
+    schema: response200WithIdSchema,
+    handler: seriesHandler.deleteImage
   })
 }
 

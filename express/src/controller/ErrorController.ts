@@ -26,5 +26,6 @@ export function errorHandler(err: Error, req: Request, res: Response, next: Next
     return res.status(400).json({ message: err.message, reason: 'Error name isn\'t a status code!' })
   }
 
+  console.log(err);
   return res.status(parseInt(err.name)).json({ message: err.message });
 }

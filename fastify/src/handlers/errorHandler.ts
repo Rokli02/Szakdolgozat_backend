@@ -26,5 +26,6 @@ export function errorHandler(res: FastifyReply, err: Error) {
     return res.status(400).send({ message: err.message, reason: 'Error name isn\'t a status code!' })
   }
 
+  console.log(err);
   return res.status(parseInt(err.name)).send({ message: err.message });
 }

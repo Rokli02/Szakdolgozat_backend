@@ -19,7 +19,7 @@ export class AuthorizationController {
   allRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const roles = await this.service.findAllRole();
-      return res.json(roles);
+      return res.json({ roles });
     } catch(err) {
       return next(err);
     }

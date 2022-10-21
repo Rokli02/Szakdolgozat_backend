@@ -21,6 +21,7 @@ export const seriesRoutes = () => {
   
   router.post("/", seriesFieldsRequired, validateSeriesFields, seriesController.save);
   router.put("/:id", hasValidIdParameter, validateSeriesFields, seriesController.update);
+  router.delete("/image/:id", hasValidIdParameter, seriesController.deleteImage);
 
   return router;
 }

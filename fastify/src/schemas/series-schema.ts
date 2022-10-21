@@ -26,6 +26,28 @@ const saveCategorySchema = {
   }
 }
 
+const fileOutSchema = {
+    type: ['object', 'null'],
+    properties: {
+      id: { type: 'number' },
+      name: { type: 'string' },
+      x_offset: { type: 'string' },
+      y_offset: { type: 'string' },
+    }
+}
+
+const fileInSchema = {
+  type: ['object', 'null'],
+  properties: {
+    id: { type: 'number' },
+    name: { type: 'string' },
+    x_offset: { type: 'string' },
+    y_offset: { type: 'string' },
+    mimeType: { type: 'string' },
+    path: { type: 'string' },
+  }
+}
+
 export const seriesSchemaOut = {
   type: 'object',
   properties: {
@@ -41,10 +63,12 @@ export const seriesSchemaOut = {
     categories: {
       type: 'array',
       items: categoryWithId
-    }
+    },
+    image: fileOutSchema
   }
 }
 
+//HIBA FORDULHAT ELŐ AZ IMAGE MIATT
 const seriesSchemaInUpdate = {
   type: 'object',
   properties: {
@@ -60,11 +84,12 @@ const seriesSchemaInUpdate = {
     categories: {
       type: 'array',
       items: removableCategorySchema
-    }
-  },
-  required: []
+    },
+    image: fileInSchema,
+  }
 }
 
+//HIBA FORDULHAT ELŐ AZ IMAGE MIATT
 const seriesSchemaInSave = {
   type: 'object',
   properties: {
@@ -79,7 +104,8 @@ const seriesSchemaInSave = {
     categories: {
       type: 'array',
       items: saveCategorySchema
-    }
+    },
+    image: fileInSchema,
   },
   required: ['title', 'prodYear', 'ageLimit', 'length']
 }

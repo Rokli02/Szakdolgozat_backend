@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Category } from './Category';
+import { Image } from './Image';
 import { NewsFeed } from './NewsFeed';
 import { Season } from './Season';
 import { UserSeries } from './UserSeries';
@@ -44,4 +45,12 @@ export class Series {
 
   @OneToMany(() => UserSeries, feed => feed.series)
   userserieses: UserSeries[];
+
+  @OneToOne(() => Image, image => image.series, {
+    nullable: true,
+    eager: true,
+    cascade: true
+  })
+  @JoinColumn()
+  image: Image;
 }

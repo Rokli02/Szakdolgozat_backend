@@ -52,4 +52,15 @@ export class SeriesHandler {
       errorHandler(res, err);
     }
   }
+
+  deleteImage = async (req: FastifyRequest<{ Params: { id: number }, Body: SeriesUpdateDto}>, res: FastifyReply) => {
+    const { id } = req.params;
+
+    try {
+      await this.service.deleteImage(id);
+      return { message: 'Deleted image succesfully!' };
+    } catch(err) {
+      errorHandler(res, err);
+    }
+  }
 }
