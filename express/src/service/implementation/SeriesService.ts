@@ -196,6 +196,7 @@ export class SeriesService implements iSeriesService {
         throwError("400", "Can't remove image!");
       }
       
+      this.imageService.removeImageFromDir(image.name);
       await this.imageService.removeImageFromDb(image.name);
       return true;
     } catch(err) {

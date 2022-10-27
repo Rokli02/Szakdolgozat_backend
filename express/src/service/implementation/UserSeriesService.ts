@@ -17,6 +17,7 @@ export class UserSeriesService implements iUserSeriesService {
     .leftJoinAndSelect('userseries.series', 'series')
     .leftJoinAndSelect('series.categories', 'category')
     .leftJoinAndSelect('series.seasons', 'season')
+    .leftJoinAndSelect('series.image', 'image')
     .leftJoinAndSelect('userseries.status', 'status')
     .skip((page - 1) * size)
     .take(size);
@@ -68,7 +69,7 @@ export class UserSeriesService implements iUserSeriesService {
         user: { id: userId },
         series: { id: seriesId },
       },
-      relations: ['series', 'series.seasons', 'series.categories', 'status']
+      relations: ['series', 'series.seasons', 'series.categories', 'series.image', 'status']
     });
     if(!userSeries) {
       throwError('404', `There is no userSeries, with userId ${userId} and seriesId ${seriesId}`);
