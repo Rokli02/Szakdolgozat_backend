@@ -1,6 +1,6 @@
 {
   "name": "express",
-  "version": "0.9.9",
+  "version": "1.0.0",
   "author": "Markó Roland",
   "description": "Szakdolgozat Express API",
   "type": "commonjs",
