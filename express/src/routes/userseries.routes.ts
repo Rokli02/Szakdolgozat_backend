@@ -15,7 +15,7 @@ export const userSeriesRoutes = () => {
 
   router.get("/page/:page", hasValidPageAndSize, userseriesController.all);
   router.get("/:id", hasValidIdParameter, userseriesController.one);
-  router.post("/", validateUserSeriesFields, userseriesController.save); //Validáló metódus
+  router.post("/", validateUserSeriesFields, userseriesController.save);
   router.put("/:id", hasValidIdParameter, validateUserSeriesFields, userseriesController.update);
   router.delete("/:id", hasValidIdParameter, userseriesController.remove);
 
