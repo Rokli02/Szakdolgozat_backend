@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class UpdateCategory {
-  private int id;
+  private Long id;
   private boolean remove;
 }

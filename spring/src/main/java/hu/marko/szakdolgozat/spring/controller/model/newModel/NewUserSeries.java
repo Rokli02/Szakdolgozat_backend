@@ -14,6 +14,6 @@ public class NewUserSeries {
   private User user;
   private Series series;
   private Status status;
-  private int season;
-  private int episode;
+  private Integer season;
+  private Integer episode;
 }

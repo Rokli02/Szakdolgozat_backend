@@ -6,11 +6,11 @@ import hu.marko.szakdolgozat.spring.service.model.Role;
 import hu.marko.szakdolgozat.spring.service.model.User;
 
 public interface AuthorizationService {
-  boolean login(String usernameOrEmail, String password);
+  User validUser(Long id, String username, String email);
 
-  boolean signup(User user);
+  Boolean signup(User user);
 
-  boolean hasRight(User user, String nameOfRight);
+  Boolean hasRight(User user, String nameOfRight);
 
   List<Role> findAllRole();
 }

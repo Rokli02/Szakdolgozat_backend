@@ -8,11 +8,11 @@ public interface SeriesService {
   PageModel<Series> findByPageAndSizeAndFilterAndOrder(int page, int size, String filter, String order,
       boolean ascendingDirection);
 
-  Series findOne(int id);
+  Series findOne(Long id);
 
   Series save(Series series);
 
-  boolean update(int id, UpdateSeries entity);
+  Boolean update(Long id, UpdateSeries entity);
 
-  boolean deleteImage(int seriesId);
+  Boolean deleteImage(Long seriesId);
 }

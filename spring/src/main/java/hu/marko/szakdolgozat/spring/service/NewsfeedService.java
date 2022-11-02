@@ -7,14 +7,14 @@ public interface NewsfeedService {
   PageModel<Newsfeed> findByPageAndSizeAndFilterAndOrder(int page, int size, String filter, String order,
       boolean ascendingDirection);
 
-  PageModel<Newsfeed> findByUserAndPageAndSizeAndFilterAndOrder(int userid, int page, int size, String filter,
+  PageModel<Newsfeed> findByUserAndPageAndSizeAndFilterAndOrder(Long userid, int page, int size, String filter,
       String order, boolean ascendingDirection);
 
-  Newsfeed findOne(int id);
+  Newsfeed findOne(Long id);
 
   Newsfeed save(Newsfeed newsfeed);
 
-  boolean update(int id, Newsfeed newsfeed);
+  Boolean update(Long id, Newsfeed newsfeed);
 
-  int remove(int id);
+  Long remove(Long id);
 }

@@ -1,5 +1,6 @@
 package hu.marko.szakdolgozat.spring.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ImageController {
 
   // TODO: Megcsinálni a képfeltöltést
-  @PostMapping("/")
-  public String uploadImage() {
-    return "uploadImage";
+  @PostMapping("")
+  public ResponseEntity<String> uploadImage() {
+    return null;
   }
 }

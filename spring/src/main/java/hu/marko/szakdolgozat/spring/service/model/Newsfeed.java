@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class Newsfeed {
-  private int id;
+  private Long id;
   private String title;
   private String description;
   private String modification;

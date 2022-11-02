@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class UserSeries {
-  private int id;
+  private Long id;
   private User user;
   private Series series;
   private Status status;
-  private int season;
-  private int episode;
+  private Integer season;
+  private Integer episode;
   private String modification;
 }

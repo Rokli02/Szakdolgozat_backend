@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class Series {
-  private int id;
+  private Long id;
   private String title;
-  private int prodYear;
-  private int ageLimit;
-  private int length;
+  private Integer prodYear;
+  private Integer ageLimit;
+  private Integer length;
   private String added;
   private Season[] seasons;
   private Category categories;

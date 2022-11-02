@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class NewSeason {
-  private int season;
-  private int episode;
+  private Integer season;
+  private Integer episode;
   private Series series;
 }

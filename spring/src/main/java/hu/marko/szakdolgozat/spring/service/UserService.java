@@ -7,9 +7,9 @@ public interface UserService {
   PageModel<User> findByPageAndSizeAndFilterAndOrder(int page, int size, String filter, String order,
       boolean ascendingDirection);
 
-  User findOne(int id);
+  User findOne(Long id);
 
-  boolean update(int id, User user);
+  Boolean update(Long id, User user);
 
-  int remove(int id);
+  Long remove(Long id);
 }

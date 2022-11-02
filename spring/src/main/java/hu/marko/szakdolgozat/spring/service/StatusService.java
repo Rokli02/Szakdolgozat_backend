@@ -9,5 +9,5 @@ public interface StatusService {
 
   Status save(Status entity);
 
-  boolean update(int id, Status entity);
+  Boolean update(Long id, Status entity);
 }

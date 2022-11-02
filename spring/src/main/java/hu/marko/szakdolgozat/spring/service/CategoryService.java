@@ -9,5 +9,5 @@ public interface CategoryService {
 
   Category save(Category category);
 
-  boolean update(int id, Category category);
+  Boolean update(Long id, Category category);
 }

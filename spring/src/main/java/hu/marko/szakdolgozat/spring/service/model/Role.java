@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class Role {
-  private int id;
+  private Long id;
   private String name;
+
+  public Role(hu.marko.szakdolgozat.spring.repository.model.Role role) {
+    this(role.getId(), role.getName());
+  }
 }

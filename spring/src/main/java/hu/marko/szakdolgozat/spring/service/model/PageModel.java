@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class PageModel<T> {
   private List<T> models;
-  private int count;
+  private Integer count;
 }

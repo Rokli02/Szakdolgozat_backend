@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class NewSeries {
   private String title;
-  private int prodYear;
-  private int ageLimit;
-  private int length;
+  private Integer prodYear;
+  private Integer ageLimit;
+  private Integer length;
   private Season[] seasons;
   private Category categories;
   // private Image image;

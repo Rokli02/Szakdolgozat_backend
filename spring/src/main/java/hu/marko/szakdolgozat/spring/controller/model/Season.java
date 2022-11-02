@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class Season {
-  private int id;
-  private int season;
-  private int episode;
+  private Long id;
+  private Integer season;
+  private Integer episode;
   private Series series;
 }

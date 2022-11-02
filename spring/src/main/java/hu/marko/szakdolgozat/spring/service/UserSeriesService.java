@@ -4,14 +4,14 @@ import hu.marko.szakdolgozat.spring.service.model.PageModel;
 import hu.marko.szakdolgozat.spring.service.model.UserSeries;
 
 public interface UserSeriesService {
-  PageModel<UserSeries> findByPageAndSizeAndFilterAndStatusAndOrder(int userId, int page, int size, String filter,
+  PageModel<UserSeries> findByPageAndSizeAndFilterAndStatusAndOrder(Long userId, int page, int size, String filter,
       int status, String order, boolean ascendingDirection);
 
-  UserSeries findOne(int userId, int seriesId);
+  UserSeries findOne(Long userId, Long seriesId);
 
-  UserSeries save(int userId, UserSeries entity);
+  UserSeries save(Long userId, UserSeries entity);
 
-  boolean update(int userId, int seriesId, UserSeries entity);
+  Boolean update(Long userId, Long seriesId, UserSeries entity);
 
-  int remove(int userId, int seriesId);
+  Long remove(Long userId, Long seriesId);
 }
