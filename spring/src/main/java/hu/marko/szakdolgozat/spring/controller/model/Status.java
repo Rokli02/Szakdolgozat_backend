@@ -10,4 +10,12 @@ import lombok.NoArgsConstructor;
 public class Status {
   private Long id;
   private String name;
+
+  public Status(hu.marko.szakdolgozat.spring.service.model.Status status) {
+    this(status.getId(), status.getName());
+  }
+
+  public hu.marko.szakdolgozat.spring.service.model.Status toServiceStatus() {
+    return new hu.marko.szakdolgozat.spring.service.model.Status(id, name);
+  }
 }

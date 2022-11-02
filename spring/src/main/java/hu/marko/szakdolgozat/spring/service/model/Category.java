@@ -10,4 +10,12 @@ import lombok.NoArgsConstructor;
 public class Category {
   private Long id;
   private String name;
+
+  public Category(hu.marko.szakdolgozat.spring.repository.model.Category category) {
+    this(category.getId(), category.getName());
+  }
+
+  public hu.marko.szakdolgozat.spring.repository.model.Category toEntity() {
+    return new hu.marko.szakdolgozat.spring.repository.model.Category(id, name);
+  }
 }

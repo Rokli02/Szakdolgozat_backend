@@ -26,14 +26,17 @@ public class User {
   @GeneratedValue
   private Long id;
   @NotBlank
+  @Column(nullable = false)
   private String name;
   @NotBlank
   @Column(columnDefinition = "date")
   private String birthdate;
   @NotBlank
+  @Column(unique = true, nullable = false)
   private String username;
   @NotBlank
   @Email
+  @Column(unique = true, nullable = false)
   private String email;
   @NotBlank
   private String password;

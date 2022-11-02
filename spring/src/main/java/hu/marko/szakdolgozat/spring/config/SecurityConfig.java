@@ -1,13 +1,6 @@
 package hu.marko.szakdolgozat.spring.config;
 
-import java.io.IOException;
 import java.util.Collection;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

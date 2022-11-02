@@ -10,4 +10,12 @@ import lombok.NoArgsConstructor;
 public class Status {
   private Long id;
   private String name;
+
+  public Status(hu.marko.szakdolgozat.spring.repository.model.Status status) {
+    this(status.getId(), status.getName());
+  }
+
+  public hu.marko.szakdolgozat.spring.repository.model.Status toEntity() {
+    return new hu.marko.szakdolgozat.spring.repository.model.Status(id, name);
+  }
 }
