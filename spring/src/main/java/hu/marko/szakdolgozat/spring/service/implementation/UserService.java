@@ -1,7 +1,14 @@
 package hu.marko.szakdolgozat.spring.service.implementation;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -9,25 +16,46 @@ import hu.marko.szakdolgozat.spring.exception.NotFoundException;
 import hu.marko.szakdolgozat.spring.repository.RoleRepository;
 import hu.marko.szakdolgozat.spring.repository.UserRepository;
 import hu.marko.szakdolgozat.spring.service.model.User;
+import lombok.AllArgsConstructor;
 import hu.marko.szakdolgozat.spring.service.model.PageModel;
 
+@AllArgsConstructor
 @Service
 public class UserService implements hu.marko.szakdolgozat.spring.service.UserService {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final PasswordEncoder encoder;
 
-  public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder) {
-    this.userRepository = userRepository;
-    this.roleRepository = roleRepository;
-    this.encoder = encoder;
-  }
-
   @Override
-  public PageModel<User> findByPageAndSizeAndFilterAndOrder(int page, int size, String filter, String order,
-      boolean ascendingDirection) {
-    // TODO Auto-generated method stub
-    return null;
+  public PageModel<User> findByPageAndSizeAndFilterAndOrder(Integer page, Integer size, String filter, String order,
+      Boolean ascendingDirection) {
+
+    Direction direction;
+    if (ascendingDirection == null || !ascendingDirection) {
+      direction = Direction.DESC;
+    } else {
+      direction = Direction.ASC;
+    }
+
+    String interFilter = "";
+    if (filter != null) {
+      interFilter = filter;
+    }
+    String interOrder = "id";
+    if (order != null) {
+      interOrder = order;
+    }
+
+    Page<hu.marko.szakdolgozat.spring.repository.model.User> pagedEntity = userRepository
+        .findWithPagination(PageRequest.of(page - 1, size, Sort.by(direction, interOrder)), interFilter);
+
+    List<User> userList = StreamSupport.stream(pagedEntity.getContent().spliterator(), false).map((user) -> {
+      User tempUser = new User(user);
+      tempUser.setPassword(null);
+      return tempUser;
+    }).collect(Collectors.toList());
+    PageModel<User> pageModel = new PageModel<User>(userList, pagedEntity.getTotalElements());
+    return pageModel;
   }
 
   @Override

@@ -42,10 +42,10 @@ public class User {
   private String password;
   @Column(columnDefinition = "boolean default true")
   private Boolean active;
-  @CreationTimestamp()
+  @CreationTimestamp
   @Column(updatable = false, columnDefinition = "datetime(6) default CURRENT_TIMESTAMP(6)")
   private Date created;
   @ManyToOne
-  @JoinColumn(name = "roleId", nullable = false)
+  @JoinColumn(name = "role_id", nullable = false)
   private Role role;
 }

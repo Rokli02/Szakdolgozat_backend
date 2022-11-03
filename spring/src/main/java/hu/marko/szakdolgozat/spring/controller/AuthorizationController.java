@@ -37,8 +37,8 @@ public class AuthorizationController {
   public ResponseEntity<Message> signup(@RequestBody @NotNull NewUser newUser) {
     if (authService.signup(new User(null, newUser.getName(), newUser.getUsername(), newUser.getEmail(),
         newUser.getBirthdate(), newUser.getPassword(), null, null, null))) {
-      return ResponseEntity.status(HttpStatus.CREATED).body(new Message("Sikeres regisztráció!"));
+      return ResponseEntity.status(HttpStatus.CREATED).body(new Message("Signed up successfully!"));
     }
-    return ResponseEntity.badRequest().body(new Message("Sikertelen regisztráció!"));
+    return ResponseEntity.badRequest().body(new Message("Unsuccessful registration!"));
   }
 }

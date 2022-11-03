@@ -1,5 +1,8 @@
 package hu.marko.szakdolgozat.spring.controller;
 
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
@@ -14,33 +17,47 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.marko.szakdolgozat.spring.controller.model.Message;
-import hu.marko.szakdolgozat.spring.controller.model.PageModel;
 import hu.marko.szakdolgozat.spring.controller.model.User;
+import hu.marko.szakdolgozat.spring.controller.model.wrapper.UsersWrapper;
+import hu.marko.szakdolgozat.spring.service.UserService;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+  private UserService userService;
 
   @GetMapping("/page/{page}")
-  public ResponseEntity<PageModel<User>> getAllUsers(@PathVariable("page") @NotNull Integer page,
+  public ResponseEntity<UsersWrapper> getAllUsers(@PathVariable("page") @NotNull Integer page,
       @NotNull @RequestParam("size") Integer size,
       @RequestParam("filt") @Nullable String filt, @RequestParam("ordr") @Nullable String ordr,
       @RequestParam("dir") @Nullable Boolean dir) {
-    return null;
+    hu.marko.szakdolgozat.spring.service.model.PageModel<hu.marko.szakdolgozat.spring.service.model.User> sPageModel = userService
+        .findByPageAndSizeAndFilterAndOrder(page, size, filt, ordr, dir);
+    return ResponseEntity.ok().body(new UsersWrapper(
+        StreamSupport.stream(sPageModel.getModels().spliterator(), false).map(User::new).collect(Collectors.toList()),
+        sPageModel.getCount()));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<User> getOneUser(@PathVariable("id") Integer id) {
-    return null;
+  public ResponseEntity<User> getOneUser(@PathVariable("id") @NotNull Long id) {
+    return ResponseEntity.ok().body(new User(userService.findOne(id)));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Message> updateUser(@PathVariable("id") Integer id, @RequestBody String user) {
-    return null;
+  public ResponseEntity<Message> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
+    if (userService.update(id, user.toServiceUser())) {
+      return ResponseEntity.ok().body(new Message("User is modified succesfully!"));
+    }
+    return ResponseEntity.ok().body(new Message("Couldn't modify user!"));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Message> deleteUser(@PathVariable("id") Integer id) {
-    return null;
+  public ResponseEntity<Message> deleteUser(@PathVariable("id") Long id) {
+    if (userService.remove(id) != null) {
+      return ResponseEntity.ok().body(new Message("User is deactivated!"));
+    }
+    return ResponseEntity.ok().body(new Message("Couldn't deactivate user!"));
   }
 }

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hu.marko.szakdolgozat.spring.controller.model.newModel.NewSeries;
 import hu.marko.szakdolgozat.spring.controller.model.Message;
-import hu.marko.szakdolgozat.spring.controller.model.PageModel;
 import hu.marko.szakdolgozat.spring.controller.model.Series;
 
 @RestController
@@ -24,7 +23,7 @@ import hu.marko.szakdolgozat.spring.controller.model.Series;
 public class SeriesController {
 
   @GetMapping("/page/{page}")
-  public ResponseEntity<PageModel<Series>> getAllSerieses(@PathVariable("page") @NotNull Integer page,
+  public ResponseEntity<String> getAllSerieses(@PathVariable("page") @NotNull Integer page,
       @NotNull @RequestParam("size") Integer size,
       @RequestParam("filt") @Nullable String filt, @RequestParam("ordr") @Nullable String ordr,
       @RequestParam("dir") @Nullable Boolean dir) {

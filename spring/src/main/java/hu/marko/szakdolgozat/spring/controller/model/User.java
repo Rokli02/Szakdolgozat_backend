@@ -1,5 +1,7 @@
 package hu.marko.szakdolgozat.spring.controller.model;
 
+import java.sql.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,4 +19,14 @@ public class User {
   private Role role;
   private String created;
   private boolean active;
+
+  public User(hu.marko.szakdolgozat.spring.service.model.User user) {
+    this(user.getId(), user.getName(), user.getUsername(), user.getEmail(), user.getBirthdate(), user.getPassword(),
+        new Role(user.getRole()), user.getCreated().toString(), user.getActive());
+  }
+
+  public hu.marko.szakdolgozat.spring.service.model.User toServiceUser() {
+    return new hu.marko.szakdolgozat.spring.service.model.User(id, name, username, email, birthdate, password,
+        role.toServiceRole(), new Date(new java.util.Date(created).getTime()), active);
+  }
 }

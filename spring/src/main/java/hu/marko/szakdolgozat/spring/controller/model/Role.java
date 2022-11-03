@@ -16,4 +16,8 @@ public class Role implements Serializable {
   public Role(hu.marko.szakdolgozat.spring.service.model.Role role) {
     this(role.getId(), role.getName());
   }
+
+  public hu.marko.szakdolgozat.spring.service.model.Role toServiceRole() {
+    return new hu.marko.szakdolgozat.spring.service.model.Role(id, name);
+  }
 }

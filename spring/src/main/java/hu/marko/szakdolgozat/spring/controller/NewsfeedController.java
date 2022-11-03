@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hu.marko.szakdolgozat.spring.controller.model.Message;
 import hu.marko.szakdolgozat.spring.controller.model.Newsfeed;
-import hu.marko.szakdolgozat.spring.controller.model.PageModel;
 import hu.marko.szakdolgozat.spring.controller.model.newModel.NewNewsfeed;
 
 @RestController
@@ -24,7 +23,7 @@ import hu.marko.szakdolgozat.spring.controller.model.newModel.NewNewsfeed;
 public class NewsfeedController {
 
   @GetMapping("/page/{page}")
-  public ResponseEntity<PageModel<Newsfeed>> getAllNewsfeeds(@PathVariable("page") @NotNull Integer page,
+  public ResponseEntity<String> getAllNewsfeeds(@PathVariable("page") @NotNull Integer page,
       @NotNull @RequestParam("size") Integer size,
       @RequestParam("filt") @Nullable String filt, @RequestParam("ordr") @Nullable String ordr,
       @RequestParam("dir") @Nullable Boolean dir) {
@@ -38,7 +37,7 @@ public class NewsfeedController {
 
   // Csak user
   @GetMapping("/personal/page/{page}")
-  public ResponseEntity<PageModel<Newsfeed>> getAllPersonalNewsfeeds(@PathVariable("page") @NotNull Integer page,
+  public ResponseEntity<String> getAllPersonalNewsfeeds(@PathVariable("page") @NotNull Integer page,
       @NotNull @RequestParam("size") Integer size,
       @RequestParam("filt") @Nullable String filt, @RequestParam("ordr") @Nullable String ordr,
       @RequestParam("dir") @Nullable Boolean dir) {
