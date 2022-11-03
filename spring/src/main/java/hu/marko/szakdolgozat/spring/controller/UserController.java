@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hu.marko.szakdolgozat.spring.controller.model.Message;
 import hu.marko.szakdolgozat.spring.controller.model.User;
+import hu.marko.szakdolgozat.spring.controller.model.wrapper.UserWrapper;
 import hu.marko.szakdolgozat.spring.controller.model.wrapper.UsersWrapper;
 import hu.marko.szakdolgozat.spring.service.UserService;
 import lombok.AllArgsConstructor;
@@ -41,8 +42,8 @@ public class UserController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<User> getOneUser(@PathVariable("id") @NotNull Long id) {
-    return ResponseEntity.ok().body(new User(userService.findOne(id)));
+  public ResponseEntity<UserWrapper> getOneUser(@PathVariable("id") @NotNull Long id) {
+    return ResponseEntity.ok().body(new UserWrapper(new User(userService.findOne(id))));
   }
 
   @PutMapping("/{id}")
@@ -50,7 +51,7 @@ public class UserController {
     if (userService.update(id, user.toServiceUser())) {
       return ResponseEntity.ok().body(new Message("User is modified succesfully!"));
     }
-    return ResponseEntity.ok().body(new Message("Couldn't modify user!"));
+    return ResponseEntity.badRequest().body(new Message("Couldn't modify user!"));
   }
 
   @DeleteMapping("/{id}")
@@ -58,6 +59,6 @@ public class UserController {
     if (userService.remove(id) != null) {
       return ResponseEntity.ok().body(new Message("User is deactivated!"));
     }
-    return ResponseEntity.ok().body(new Message("Couldn't deactivate user!"));
+    return ResponseEntity.badRequest().body(new Message("Couldn't deactivate user!"));
   }
 }

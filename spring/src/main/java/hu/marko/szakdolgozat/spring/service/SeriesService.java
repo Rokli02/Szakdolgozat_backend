@@ -5,8 +5,8 @@ import hu.marko.szakdolgozat.spring.service.model.Series;
 import hu.marko.szakdolgozat.spring.service.model.UpdateSeries;
 
 public interface SeriesService {
-  PageModel<Series> findByPageAndSizeAndFilterAndOrder(int page, int size, String filter, String order,
-      boolean ascendingDirection);
+  PageModel<Series> findByPageAndSizeAndFilterAndOrder(Integer page, Integer size, String filter, String order,
+      Boolean ascendingDirection);
 
   Series findOne(Long id);
 

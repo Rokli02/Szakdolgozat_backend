@@ -10,4 +10,8 @@ import lombok.NoArgsConstructor;
 public class UpdateCategory {
   private Long id;
   private boolean remove;
+
+  public hu.marko.szakdolgozat.spring.service.model.UpdateCategory toServiceUpdateCategory() {
+    return new hu.marko.szakdolgozat.spring.service.model.UpdateCategory(id, remove);
+  }
 }

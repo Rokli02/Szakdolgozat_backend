@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Min;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "season", "series" }))
 public class Season {
   @Id
   @GeneratedValue
@@ -29,4 +32,9 @@ public class Season {
   @ManyToOne(targetEntity = Series.class)
   @JoinColumn(name = "series_id", nullable = false)
   private Series series;
+
+  public Season(hu.marko.szakdolgozat.spring.service.model.Season season,
+      hu.marko.szakdolgozat.spring.service.model.Series series) {
+    this(season.getId(), season.getSeason(), season.getEpisode(), series.toEntity());
+  }
 }

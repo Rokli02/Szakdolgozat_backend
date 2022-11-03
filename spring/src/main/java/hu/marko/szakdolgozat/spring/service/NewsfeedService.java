@@ -4,11 +4,11 @@ import hu.marko.szakdolgozat.spring.service.model.Newsfeed;
 import hu.marko.szakdolgozat.spring.service.model.PageModel;
 
 public interface NewsfeedService {
-  PageModel<Newsfeed> findByPageAndSizeAndFilterAndOrder(int page, int size, String filter, String order,
-      boolean ascendingDirection);
+  PageModel<Newsfeed> findByPageAndSizeAndFilterAndOrder(Integer page, Integer size, String filter, String order,
+      Boolean ascendingDirection);
 
-  PageModel<Newsfeed> findByUserAndPageAndSizeAndFilterAndOrder(Long userid, int page, int size, String filter,
-      String order, boolean ascendingDirection);
+  PageModel<Newsfeed> findByUserAndPageAndSizeAndFilterAndOrder(Long userid, Integer page, Integer size, String filter,
+      String order, Boolean ascendingDirection);
 
   Newsfeed findOne(Long id);
 

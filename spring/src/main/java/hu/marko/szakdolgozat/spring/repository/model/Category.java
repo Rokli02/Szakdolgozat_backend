@@ -1,6 +1,6 @@
 package hu.marko.szakdolgozat.spring.repository.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +21,7 @@ public class Category {
   @Column(nullable = false)
   String name;
   @ManyToMany(mappedBy = "categories")
-  List<Series> serieses;
+  Set<Series> serieses;
 
   public Category(Long id, String name) {
     this.id = id;

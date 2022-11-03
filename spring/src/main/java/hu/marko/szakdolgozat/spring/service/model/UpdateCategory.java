@@ -9,5 +9,18 @@ import lombok.NoArgsConstructor;
 @Data
 public class UpdateCategory {
   private Long id;
-  private boolean remove;
+  private String name;
+  private Boolean remove;
+
+  public UpdateCategory(Long id, Boolean remove) {
+    this(id, null, remove);
+  }
+
+  public UpdateCategory(hu.marko.szakdolgozat.spring.repository.model.Category category) {
+    this(category.getId(), category.getName(), false);
+  }
+
+  public hu.marko.szakdolgozat.spring.repository.model.Category toEntity() {
+    return new hu.marko.szakdolgozat.spring.repository.model.Category(id, name);
+  }
 }

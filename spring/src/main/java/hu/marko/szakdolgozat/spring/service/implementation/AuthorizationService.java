@@ -22,19 +22,15 @@ import hu.marko.szakdolgozat.spring.repository.RoleRepository;
 import hu.marko.szakdolgozat.spring.repository.UserRepository;
 import hu.marko.szakdolgozat.spring.service.model.Role;
 import hu.marko.szakdolgozat.spring.service.model.User;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 @Service
 public class AuthorizationService
     implements hu.marko.szakdolgozat.spring.service.AuthorizationService, UserDetailsService {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final PasswordEncoder encoder;
-
-  public AuthorizationService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder) {
-    this.userRepository = userRepository;
-    this.roleRepository = roleRepository;
-    this.encoder = encoder;
-  }
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

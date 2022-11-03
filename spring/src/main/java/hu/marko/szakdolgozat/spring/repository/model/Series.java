@@ -2,6 +2,7 @@ package hu.marko.szakdolgozat.spring.repository.model;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -43,13 +44,13 @@ public class Series {
   @CreationTimestamp
   @Column(updatable = false, columnDefinition = "datetime(6) default CURRENT_TIMESTAMP(6)")
   private Date added;
-  @OneToMany(mappedBy = "series", targetEntity = Season.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = {
-      CascadeType.ALL })
+  @OneToMany(mappedBy = "series", targetEntity = Season.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<Season> seasons;
   @ManyToMany
   @JoinTable(name = "series_categories_category", joinColumns = @JoinColumn(name = "series_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-  private List<Category> categories;
-  // private List<Newsfeed> newsfeeds;
+  private Set<Category> categories;
+  @OneToMany(mappedBy = "series", targetEntity = Newsfeed.class, fetch = FetchType.LAZY)
+  private List<Newsfeed> newsfeeds;
   // private List<UserSeries> userserieses;
   // private Image image;
 }
