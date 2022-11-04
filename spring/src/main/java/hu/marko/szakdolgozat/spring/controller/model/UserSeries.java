@@ -15,4 +15,15 @@ public class UserSeries {
   private Integer season;
   private Integer episode;
   private String modification;
+
+  public UserSeries(hu.marko.szakdolgozat.spring.service.model.UserSeries userSeries) {
+    this(userSeries.getId(), new User(userSeries.getUser()), new Series(userSeries.getSeries()),
+        new Status(userSeries.getStatus()), userSeries.getSeason(), userSeries.getEpisode(),
+        userSeries.getModification());
+  }
+
+  public hu.marko.szakdolgozat.spring.service.model.UserSeries toServiceUserseries() {
+    return new hu.marko.szakdolgozat.spring.service.model.UserSeries(id, user.toServiceUser(), series.toServiceSeries(),
+        status.toServiceStatus(), season, episode, modification);
+  }
 }

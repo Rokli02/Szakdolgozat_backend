@@ -45,6 +45,6 @@ public class Series {
         StreamSupport.stream(seasons.spliterator(), false)
             .map((season) -> new hu.marko.szakdolgozat.spring.repository.model.Season(season, this))
             .collect(Collectors.toList()),
-        new HashSet<hu.marko.szakdolgozat.spring.repository.model.Category>(), null);
+        new HashSet<hu.marko.szakdolgozat.spring.repository.model.Category>(), null, null);
   }
 }

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "season", "series" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "season", "series_id" }))
 public class Season {
   @Id
   @GeneratedValue

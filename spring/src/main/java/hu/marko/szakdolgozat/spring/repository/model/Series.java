@@ -51,6 +51,7 @@ public class Series {
   private Set<Category> categories;
   @OneToMany(mappedBy = "series", targetEntity = Newsfeed.class, fetch = FetchType.LAZY)
   private List<Newsfeed> newsfeeds;
-  // private List<UserSeries> userserieses;
+  @OneToMany(mappedBy = "series", targetEntity = Userseries.class, fetch = FetchType.LAZY)
+  private List<Userseries> userserieses;
   // private Image image;
 }

@@ -16,4 +16,9 @@ public class NewUserSeries {
   private Status status;
   private Integer season;
   private Integer episode;
+
+  public hu.marko.szakdolgozat.spring.service.model.UserSeries toServiceUserseries() {
+    return new hu.marko.szakdolgozat.spring.service.model.UserSeries(null, user.toServiceUser(),
+        series.toServiceSeries(), status.toServiceStatus(), season, episode, null);
+  }
 }

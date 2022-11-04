@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
@@ -55,9 +56,10 @@ public class NewsfeedController {
   public ResponseEntity<NewsfeedsWrapper> getAllPersonalNewsfeeds(@PathVariable("page") @NotNull Integer page,
       @NotNull @RequestParam("size") Integer size,
       @RequestParam("filt") @Nullable String filt, @RequestParam("ordr") @Nullable String ordr,
-      @RequestParam("dir") @Nullable Boolean dir) {
+      @RequestParam("dir") @Nullable Boolean dir, HttpServletRequest request) {
+    Long userId = (Long) request.getAttribute("userId");
     // TODO: Ha kész a Userseries, implementálni ezt
-    return null;
+    return ResponseEntity.ok().body(new NewsfeedsWrapper(null, -1L));
   }
 
   @PostMapping("")
