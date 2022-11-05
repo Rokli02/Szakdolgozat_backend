@@ -45,6 +45,7 @@ public class StatusController {
   @PutMapping("/{id}")
   public ResponseEntity<Message> updateStatus(@PathVariable("id") @NotNull Long id,
       @RequestBody @NotNull Status status) {
+    System.out.println(status.toString());
     if (statusService.update(id, status.toServiceStatus())) {
       return ResponseEntity.ok().body(new Message("Status is updated succesfully!"));
     }

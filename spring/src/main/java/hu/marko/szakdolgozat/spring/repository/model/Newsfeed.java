@@ -25,6 +25,7 @@ public class Newsfeed {
   private Long id;
   @Column(nullable = false)
   private String title;
+  @Column(columnDefinition = "text")
   private String description;
   @UpdateTimestamp
   @Column(columnDefinition = "datetime(6) default CURRENT_TIMESTAMP(6)")

@@ -1,5 +1,6 @@
 package hu.marko.szakdolgozat.spring.config;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.context.annotation.Bean;
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,6 +19,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import hu.marko.szakdolgozat.spring.exception.BadRequestException;
 import hu.marko.szakdolgozat.spring.filter.AuthenticationFilter;
@@ -36,30 +41,44 @@ public class SecurityConfig {
   @Bean
   @Order(1)
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf().disable();
-    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+        .authorizeRequests().antMatchers(HttpMethod.GET, "/api/categories").permitAll()
+        .antMatchers(HttpMethod.GET, "/api/statuses").permitAll()
+        .antMatchers(HttpMethod.GET, "/api/serieses/**").permitAll()
+        .antMatchers(HttpMethod.GET, "/api/newsfeeds/**").permitAll()
+        .antMatchers("/api/auth/**").permitAll()
 
-    http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/categories").permitAll();
-    http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/statuses").permitAll();
-    http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/serieses/**").permitAll();
-    http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/newsfeeds/**").permitAll();
-    http.authorizeRequests().antMatchers("/api/auth/**").permitAll();
+        .antMatchers(HttpMethod.GET, "/api/newsfeeds/personal/**").hasAuthority("user")
+        .antMatchers("/api/user/series/**").hasAuthority("user")
 
-    http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/newsfeeds/personal/**").hasAuthority("user");
-    http.authorizeRequests().antMatchers("/api/user/series/**").hasAuthority("user");
+        .antMatchers("/api/users/**").hasAuthority("admin")
 
-    http.authorizeRequests().antMatchers("/api/users/**").hasAuthority("admin");
+        .antMatchers(HttpMethod.POST, "/api/images").hasAnyAuthority("admin", "siteManager")
+        .antMatchers("/api/statuses/**").hasAnyAuthority("admin", "siteManager")
+        .antMatchers("/api/serieses/**").hasAnyAuthority("admin", "siteManager")
+        .antMatchers("/api/newsfeeds/**").hasAnyAuthority("admin", "siteManager")
+        .antMatchers("/api/categories/**").hasAnyAuthority("admin", "siteManager").and()
 
-    http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/images").hasAnyAuthority("admin", "siteManager");
-    http.authorizeRequests().antMatchers("/api/statuses/**").hasAnyAuthority("admin", "siteManager");
-    http.authorizeRequests().antMatchers("/api/serieses/**").hasAnyAuthority("admin", "siteManager");
-    http.authorizeRequests().antMatchers("/api/newsfeeds/**").hasAnyAuthority("admin", "siteManager");
-    http.authorizeRequests().antMatchers("/api/categories/**").hasAnyAuthority("admin", "siteManager");
-
-    http.addFilter(new AuthenticationFilter(AuthenticationManagerBean()));
-    http.addFilterBefore(new AuthorizationFilter(authService), UsernamePasswordAuthenticationFilter.class);
+        .addFilter(new AuthenticationFilter(AuthenticationManagerBean()))
+        .addFilterBefore(new AuthorizationFilter(authService), UsernamePasswordAuthenticationFilter.class)
+        .cors(Customizer.withDefaults())
+        .csrf().disable();
 
     return http.build();
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration corsConfig = new CorsConfiguration();
+    corsConfig.setAllowedOrigins(Arrays.asList("*"));
+    corsConfig.setMaxAge(3600L);
+    corsConfig.addAllowedMethod("*");
+    // corsConfig.setAllowedMethods(Arrays.asList("GET", "HEAD", "POST", "PUT",
+    // "DELETE", "OPTIONS"));
+    corsConfig.addAllowedHeader("*");
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", corsConfig);
+    return source;
   }
 
   @Bean

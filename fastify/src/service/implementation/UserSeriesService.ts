@@ -1,19 +1,19 @@
 import { Repository, SelectQueryBuilder } from 'typeorm';
-import { UserSeries } from '../../entity/UserSeries';
+import { Userseries } from '../../entity/Userseries';
 import { makeStringOrWhere, throwError } from './utils';
 import { iUserSeriesService } from '../UserSeriesService';
 import { dataSource } from '../../plugins/autoload/dataSource';
 import { User } from '../../entity/User';
 
 export class UserSeriesService implements iUserSeriesService {
-  private repository: Repository<UserSeries>;
-  constructor(repository?: Repository<UserSeries>) {
-    this.repository = repository ? repository : dataSource.getRepository(UserSeries);
+  private repository: Repository<Userseries>;
+  constructor(repository?: Repository<Userseries>) {
+    this.repository = repository ? repository : dataSource.getRepository(Userseries);
   }
 
-  findByPageAndSizeAndFilterAndStatusAndOrder = async (userId: number, page: number, size: number, filter?: string, status?: number, order?: string, ascendingDirection: boolean = false): Promise<[UserSeries[], number]> => {
+  findByPageAndSizeAndFilterAndStatusAndOrder = async (userId: number, page: number, size: number, filter?: string, status?: number, order?: string, ascendingDirection: boolean = false): Promise<[Userseries[], number]> => {
     const direction = ascendingDirection ? "ASC" : "DESC";
-    const query: SelectQueryBuilder<UserSeries> = this.repository.createQueryBuilder('userseries')
+    const query: SelectQueryBuilder<Userseries> = this.repository.createQueryBuilder('userseries')
     .leftJoinAndSelect('userseries.series', 'series')
     .leftJoinAndSelect('series.categories', 'category')
     .leftJoinAndSelect('series.seasons', 'season')
@@ -22,14 +22,14 @@ export class UserSeriesService implements iUserSeriesService {
     .skip((page - 1) * size)
     .take(size);
 
-    let baseWhereStatement: string = `userseries.userId = ${userId}`;
+    let baseWhereStatement: string = `userseries.user_id = ${userId}`;
 
     if(status) {
       baseWhereStatement += ` AND status.id = ${status}`;
     }
 
     if(filter) {
-      const fields: string[] = ['series.title', 'series.prodYear', 'category.name'];
+      const fields: string[] = ['series.title', 'series.prod_year', 'category.name'];
       const whereStatement = makeStringOrWhere(filter, fields);
       query.where(`${baseWhereStatement} AND ${whereStatement}`);
     } else {
@@ -41,11 +41,11 @@ export class UserSeriesService implements iUserSeriesService {
         case 'title':
           query.orderBy('series.title', direction);
           break;
-        case 'prodYear':
-          query.orderBy('series.prodYear', direction);
+        case 'prod_year':
+          query.orderBy('series.prod_year', direction);
           break;
-        case 'ageLimit':
-          query.orderBy('series.ageLimit', direction);
+        case 'age_limit':
+          query.orderBy('series.age_limit', direction);
           break;
         case 'length':
           query.orderBy('series.length', direction);
@@ -63,7 +63,7 @@ export class UserSeriesService implements iUserSeriesService {
     return query.getManyAndCount();
   };
 
-  findOne = async (userId: number, seriesId: number): Promise<UserSeries> => {
+  findOne = async (userId: number, seriesId: number): Promise<Userseries> => {
     const userSeries = await this.repository.findOne({
       where: {
         user: { id: userId },
@@ -78,7 +78,7 @@ export class UserSeriesService implements iUserSeriesService {
     return userSeries;
   };
 
-  save = async (userId: number, entity: UserSeries): Promise<UserSeries> => {
+  save = async (userId: number, entity: Userseries): Promise<Userseries> => {
     const createdUserSeries = this.repository.create(entity);
     if(!createdUserSeries) {
       throwError('400', 'No userseries is given to save!');
@@ -108,7 +108,7 @@ export class UserSeriesService implements iUserSeriesService {
     return savedUserSeries;
   };
 
-  update = async (userId: number, seriesId: number, entity: UserSeries): Promise<boolean> => {
+  update = async (userId: number, seriesId: number, entity: Userseries): Promise<boolean> => {
     const createdUserSeries = this.repository.create(entity);
     if(!createdUserSeries) {
       throwError('400', 'No userseries is given to update!');

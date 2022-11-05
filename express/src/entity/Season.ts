@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { Series } from './Series';
 
 @Entity()
@@ -17,5 +17,6 @@ export class Season {
       nullable: false,
       onDelete: 'CASCADE'
     })
+    @JoinColumn({ name: "series_id" })
     series: Series;
 }

@@ -38,20 +38,36 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
       throws AuthenticationException {
+
     String username = "", password = "";
     try {
       List<String> randomList = request.getReader().lines().collect(Collectors.toList());
-      for (String random : randomList) {
-        String line = random;
-        if (line.contains("usernameOrEmail")) {
-          username = getValueFromJsonKeyValuePair(line);
-          continue;
+      if (randomList.size() > 1) {
+        for (String random : randomList) {
+          String line = random;
+          if (line.contains("usernameOrEmail")) {
+            username = getValueFromJsonKeyValuePair(line);
+            continue;
+          }
+          if (line.contains("password")) {
+            password = getValueFromJsonKeyValuePair(line);
+            break;
+          }
         }
-        if (line.contains("password")) {
-          password = getValueFromJsonKeyValuePair(line);
-          break;
+      } else {
+        String[] keyValuePairs = randomList.get(0).split(",");
+        for (String pair : keyValuePairs) {
+          if (pair.contains("usernameOrEmail")) {
+            username = getValueFromJsonKeyValuePair(pair);
+            continue;
+          }
+          if (pair.contains("password")) {
+            password = getValueFromJsonKeyValuePair(pair);
+            break;
+          }
         }
       }
+
     } catch (IOException e1) {
       e1.printStackTrace();
     }

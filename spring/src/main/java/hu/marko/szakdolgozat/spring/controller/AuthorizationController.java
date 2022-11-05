@@ -1,6 +1,5 @@
 package hu.marko.szakdolgozat.spring.controller;
 
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import hu.marko.szakdolgozat.spring.controller.model.Message;
 import hu.marko.szakdolgozat.spring.controller.model.Role;
 import hu.marko.szakdolgozat.spring.controller.model.newModel.NewUser;
+import hu.marko.szakdolgozat.spring.controller.model.wrapper.RolesWrapper;
 import hu.marko.szakdolgozat.spring.service.AuthorizationService;
 import hu.marko.szakdolgozat.spring.service.model.User;
 import lombok.AllArgsConstructor;
@@ -28,9 +28,10 @@ public class AuthorizationController {
   private final AuthorizationService authService;
 
   @GetMapping("/roles")
-  public ResponseEntity<List<Role>> getAllRoles() {
-    return ResponseEntity.ok().body(StreamSupport.stream(authService.findAllRole().spliterator(), false).map(Role::new)
-        .collect(Collectors.toList()));
+  public ResponseEntity<RolesWrapper> getAllRoles() {
+    return ResponseEntity.ok()
+        .body(new RolesWrapper(StreamSupport.stream(authService.findAllRole().spliterator(), false).map(Role::new)
+            .collect(Collectors.toList())));
   }
 
   @PostMapping("/signup")

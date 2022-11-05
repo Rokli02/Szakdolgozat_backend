@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { UserSeries } from '../entity/UserSeries';
+import { Userseries } from '../entity/Userseries';
 import { iUserSeriesService } from '../service/UserSeriesService';
 import { errorHandler } from './errorHandler';
 
@@ -35,7 +35,7 @@ export class UserSeriesHandler {
     }
   }
 
-  save = async (req: FastifyRequest<{ Body: UserSeries }>, res: FastifyReply) => {
+  save = async (req: FastifyRequest<{ Body: Userseries }>, res: FastifyReply) => {
     const userId = req.user.id;
 
     try {
@@ -46,7 +46,7 @@ export class UserSeriesHandler {
     }
   }
 
-  update = async (req: FastifyRequest<{ Params: {id: number}, Body: UserSeries}>, res: FastifyReply) => {
+  update = async (req: FastifyRequest<{ Params: {id: number}, Body: Userseries}>, res: FastifyReply) => {
     const { id } = req.params;
     const userId = req.user.id;
 

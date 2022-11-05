@@ -1,11 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 import { Series } from './Series';
 import { Status } from './Status';
 import { User } from './User';
 
 @Entity()
 @Unique(['user', 'series'])
-export class UserSeries {
+export class Userseries {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,15 +13,24 @@ export class UserSeries {
     nullable: false,
     onDelete: 'CASCADE'
   })
+  @JoinColumn({
+    name: "user_id"
+  })
   user: User;
 
   @ManyToOne(() => Series, {
     nullable: false
   })
+  @JoinColumn({
+    name: "series_id"
+  })
   series: Series;
 
   @ManyToOne(() => Status, {
     nullable: false
+  })
+  @JoinColumn({
+    name: "status_id"
   })
   status: Status;
 

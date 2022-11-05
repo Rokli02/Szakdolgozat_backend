@@ -1,9 +1,9 @@
 package hu.marko.szakdolgozat.spring.repository.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.validation.constraints.NotEmpty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +17,6 @@ public class Role {
   @Id
   @GeneratedValue
   private Long id;
-  @NotEmpty
+  @Column(nullable = false)
   private String name;
 }

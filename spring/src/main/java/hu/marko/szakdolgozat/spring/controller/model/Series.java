@@ -1,6 +1,7 @@
 package hu.marko.szakdolgozat.spring.controller.model;
 
-import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,10 +31,20 @@ public class Series {
   // private Image image;
 
   public Series(hu.marko.szakdolgozat.spring.service.model.Series series) {
-    List<Season> seasons = StreamSupport.stream(series.getSeasons().spliterator(), false).map(Season::new)
-        .collect(Collectors.toList());
-    Set<Category> categories = StreamSupport.stream(series.getCategories().spliterator(), false).map(Category::new)
-        .collect(Collectors.toSet());
+    List<Season> seasonsList;
+    if (series.getSeasons() != null) {
+      seasonsList = StreamSupport.stream(series.getSeasons().spliterator(), false).map(Season::new)
+          .collect(Collectors.toList());
+    } else {
+      seasonsList = new ArrayList<Season>();
+    }
+    Set<Category> categories;
+    if (series.getCategories() != null) {
+      categories = StreamSupport.stream(series.getCategories().spliterator(), false).map(Category::new)
+          .collect(Collectors.toSet());
+    } else {
+      categories = new HashSet<Category>();
+    }
 
     this.id = series.getId();
     this.title = series.getTitle();
@@ -41,17 +52,29 @@ public class Series {
     this.ageLimit = series.getAgeLimit();
     this.length = series.getLength();
     this.added = series.getAdded().toString();
-    this.seasons = seasons;
+    this.seasons = seasonsList;
     this.categories = categories;
   }
 
   public hu.marko.szakdolgozat.spring.service.model.Series toServiceSeries() {
-    List<hu.marko.szakdolgozat.spring.service.model.Season> serviceSeasons = StreamSupport
-        .stream(seasons.spliterator(), false).map((sn) -> sn.toServiceSeason()).collect(Collectors.toList());
-    Set<hu.marko.szakdolgozat.spring.service.model.Category> serviceCategories = StreamSupport
-        .stream(categories.spliterator(), false).map(Category::toServiceCategory).collect(Collectors.toSet());
+    List<hu.marko.szakdolgozat.spring.service.model.Season> serviceSeasons;
+    if (this.seasons != null) {
+      serviceSeasons = StreamSupport.stream(seasons.spliterator(), false)
+          .map((sn) -> sn.toServiceSeason()).collect(Collectors.toList());
+    } else {
+      serviceSeasons = new ArrayList<hu.marko.szakdolgozat.spring.service.model.Season>();
+    }
+
+    Set<hu.marko.szakdolgozat.spring.service.model.Category> serviceCategories;
+    if (this.categories != null) {
+      serviceCategories = StreamSupport.stream(categories.spliterator(), false)
+          .map(Category::toServiceCategory).collect(Collectors.toSet());
+    } else {
+      serviceCategories = new HashSet<hu.marko.szakdolgozat.spring.service.model.Category>();
+    }
+
     return new hu.marko.szakdolgozat.spring.service.model.Series(id, title, prodYear, ageLimit, length,
-        new Date(java.util.Date.parse(added)),
+        null,
         serviceSeasons, serviceCategories);
   }
 }

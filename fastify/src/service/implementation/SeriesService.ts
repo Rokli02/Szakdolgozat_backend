@@ -30,18 +30,18 @@ export class SeriesService implements iSeriesService {
     .take(size);
 
     if(filter) {
-      const fields: string[] = ['series.title', 'series.prodYear', 'category.name'];
+      const fields: string[] = ['series.title', 'series.prod_year', 'category.name'];
       makeQueryBuilderOrWhere(query, filter, fields);
     }
     
     if(order) {
       switch (order) {
-        case "prodYear":
-          query.orderBy('series.prodYear', direction)
+        case "prod_year":
+          query.orderBy('series.prod_year', direction)
             .addOrderBy('series.added', direction);
           break;
-        case "ageLimit":
-          query.orderBy('series.ageLimit', direction);
+        case "age_limit":
+          query.orderBy('series.age_limit', direction);
           break;
         case "length":
           query.orderBy('series.length', direction);

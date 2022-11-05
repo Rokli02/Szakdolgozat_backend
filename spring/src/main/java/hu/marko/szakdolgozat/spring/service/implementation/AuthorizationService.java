@@ -44,7 +44,7 @@ public class AuthorizationService
     return new UserDetailsModel(oUser.get().getId(),
         new LoginUser(oUser.get().getName(), oUser.get().getUsername(), oUser.get().getEmail(),
             new hu.marko.szakdolgozat.spring.controller.model.Role(new Role(oUser.get().getRole())),
-            oUser.get().getCreated()),
+            oUser.get().getCreated().toString()),
         oUser.get().getUsername(), oUser.get().getPassword(), authorities);
   }
 

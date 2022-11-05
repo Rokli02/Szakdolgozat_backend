@@ -1,18 +1,18 @@
 import { Repository, SelectQueryBuilder } from 'typeorm';
-import { NewsFeed } from '../../entity/NewsFeed';
+import { Newsfeed } from '../../entity/Newsfeed';
 import { makeQueryBuilderOrWhere, makeStringOrWhere, throwError } from './utils';
 import { iNewsFeedService } from '../NewsFeedService';
 import { mysqlDataSource } from '../../data-source';
 
 export class NewsFeedService implements iNewsFeedService {
-  private repository: Repository<NewsFeed>;
-  constructor(repository?: Repository<NewsFeed>) {
-    this.repository = repository ? repository : mysqlDataSource.getRepository(NewsFeed);
+  private repository: Repository<Newsfeed>;
+  constructor(repository?: Repository<Newsfeed>) {
+    this.repository = repository ? repository : mysqlDataSource.getRepository(Newsfeed);
   }
 
-  findByPageAndSizeAndFilterAndOrder = async (page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[NewsFeed[], number]> => {
+  findByPageAndSizeAndFilterAndOrder = async (page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[Newsfeed[], number]> => {
     const direction = ascendingDirection ? "ASC" : "DESC";
-    const query: SelectQueryBuilder<NewsFeed> = this.repository.createQueryBuilder('newsfeed')
+    const query: SelectQueryBuilder<Newsfeed> = this.repository.createQueryBuilder('newsfeed')
     .leftJoinAndSelect('newsfeed.series', 'series')
     .skip((page - 1) * size)
     .take(size);
@@ -42,9 +42,9 @@ export class NewsFeedService implements iNewsFeedService {
     return query.getManyAndCount();
   };
   
-  findByUserAndPageAndSizeAndFilterAndOrder = async (userId: number, page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[NewsFeed[], number]> => {
+  findByUserAndPageAndSizeAndFilterAndOrder = async (userId: number, page: number, size: number, filter?: string, order?: string, ascendingDirection: boolean = false): Promise<[Newsfeed[], number]> => {
     const direction = ascendingDirection ? "ASC" : "DESC";
-    const query: SelectQueryBuilder<NewsFeed> = this.repository.createQueryBuilder('newsfeed')
+    const query: SelectQueryBuilder<Newsfeed> = this.repository.createQueryBuilder('newsfeed')
     .leftJoinAndSelect('newsfeed.series', 'series')
     .leftJoin('series.userserieses', 'userseries')
     .skip((page - 1) * size)
@@ -53,9 +53,9 @@ export class NewsFeedService implements iNewsFeedService {
     if(filter) {
       const fields: string[] = ['series.title', 'newsfeed.title', 'newsfeed.modification'];
       const whereStatement = makeStringOrWhere(filter, fields);
-      query.where(`userseries.userId = ${userId} AND ${whereStatement}`)
+      query.where(`userseries.user_id = ${userId} AND ${whereStatement}`)
     } else {
-      query.where('userseries.userId = :userId', {userId});
+      query.where('userseries.user_id = :userId', {userId});
     }
 
     if(order) {
@@ -78,7 +78,7 @@ export class NewsFeedService implements iNewsFeedService {
     return query.getManyAndCount();
   };
 
-  findOne = async (id: number): Promise<NewsFeed> => {
+  findOne = async (id: number): Promise<Newsfeed> => {
     const newsFeed = await this.repository.findOne({
       where: {id},
       relations: {series: true},
@@ -90,7 +90,7 @@ export class NewsFeedService implements iNewsFeedService {
     return newsFeed;
   };
 
-  save = async (entity: NewsFeed): Promise<NewsFeed> => {
+  save = async (entity: Newsfeed): Promise<Newsfeed> => {
     const createdNewsFeed = this.repository.create(entity);
     if(!createdNewsFeed) {
       throwError('400', 'No newsfeed is given to save!');
@@ -105,7 +105,7 @@ export class NewsFeedService implements iNewsFeedService {
     return savedNewsFeed;
   };
 
-  update = async (id: number, entity: NewsFeed): Promise<boolean> => {
+  update = async (id: number, entity: Newsfeed): Promise<boolean> => {
     const createdNewsFeed = this.repository.create(entity);
     if(!createdNewsFeed) {
       throwError('400', 'No category is given to save!');

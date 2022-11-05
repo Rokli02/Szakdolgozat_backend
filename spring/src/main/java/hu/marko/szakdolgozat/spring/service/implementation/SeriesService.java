@@ -1,7 +1,9 @@
 package hu.marko.szakdolgozat.spring.service.implementation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -41,21 +43,23 @@ public class SeriesService implements hu.marko.szakdolgozat.spring.service.Serie
       direction = Direction.ASC;
     }
 
-    String interFilter = "";
-    if (filter != null) {
-      interFilter = filter;
-    }
     String interOrder = "id";
     if (order != null) {
       interOrder = order;
     }
 
-    Page<hu.marko.szakdolgozat.spring.repository.model.Series> pagedEntity = seriesRepository
+    Page<hu.marko.szakdolgozat.spring.repository.model.Series> pagedEntity;
+    String interFilter = "";
+    if (filter != null) {
+      interFilter = filter;
+    }
+    pagedEntity = seriesRepository
         .findWithPagination(PageRequest.of(page - 1, size, Sort.by(direction, interOrder)), interFilter);
 
-    List<Series> seriesList = StreamSupport.stream(pagedEntity.getContent().spliterator(), false).map(Series::new)
-        .collect(Collectors.toList());
-    PageModel<Series> pageModel = new PageModel<>(seriesList, pagedEntity.getTotalElements());
+    Set<Series> seriesList = StreamSupport.stream(pagedEntity.getContent().spliterator(), false)
+        .map(Series::new)
+        .collect(Collectors.toSet());
+    PageModel<Series> pageModel = new PageModel<>(new ArrayList<Series>(seriesList), pagedEntity.getTotalElements());
     return pageModel;
   }
 
@@ -73,17 +77,28 @@ public class SeriesService implements hu.marko.szakdolgozat.spring.service.Serie
   public Series save(Series series) {
     hu.marko.szakdolgozat.spring.repository.model.Series entity = series.toEntity();
     entity.setId(null);
-    Iterable<Category> categoryEntities = categoryRepository
-        .findAllById(StreamSupport.stream(series.getCategories().spliterator(), false)
-            .map((category) -> category.getId()).collect(Collectors.toSet()));
 
-    for (Category ct : categoryEntities) {
-      entity.getCategories().add(ct);
+    // Kiszedjük a az évadokat
+    List<Season> seasons = entity.getSeasons();
+    entity.setSeasons(null);
+
+    // Mentjük a sorozatot
+    hu.marko.szakdolgozat.spring.repository.model.Series savedEntity = seriesRepository.save(entity);
+    savedEntity.setSeasons(new ArrayList<Season>());
+
+    // Beállítjuk a mentett sorozatot és Mentjük az évadokat
+    for (Season ss : seasons) {
+      ss.setSeries(savedEntity);
+    }
+
+    Iterable<Season> savedSeasons = seasonRepository.saveAll(seasons);
+
+    for (Season ss : savedSeasons) {
+      savedEntity.getSeasons().add(ss);
     }
 
     // Kép áthelyezés ideiglenes helyről
 
-    hu.marko.szakdolgozat.spring.repository.model.Series savedEntity = seriesRepository.save(entity);
     return new Series(savedEntity);
   }
 
@@ -107,9 +122,6 @@ public class SeriesService implements hu.marko.szakdolgozat.spring.service.Serie
     if (series.getLength() != null) {
       entity.setLength(series.getLength());
     }
-    if (series.getAdded() != null) {
-      entity.setAdded(series.getAdded());
-    }
     if (series.getSeasons() != null && series.getSeasons().size() > 0) {
       // Ellenőrzés
       Iterable<Season> dbSeasons = seasonRepository.findAllById(StreamSupport
@@ -123,7 +135,12 @@ public class SeriesService implements hu.marko.szakdolgozat.spring.service.Serie
       for (hu.marko.szakdolgozat.spring.service.model.Season sn : series.getSeasons()) {
         // Ha csak ID van, törölni
         if (sn.getId() != null && sn.getSeason() == null && sn.getEpisode() == null) {
-          entity.getSeasons().removeIf((season) -> season.getId() == sn.getId());
+          for (int i = 0; i < entity.getSeasons().size(); i++) {
+            if (entity.getSeasons().get(i).getId() == sn.getId()) {
+              entity.getSeasons().remove(i);
+              break;
+            }
+          }
           continue;
         }
 
@@ -148,25 +165,26 @@ public class SeriesService implements hu.marko.szakdolgozat.spring.service.Serie
       for (UpdateCategory ct : series.getCategories()) {
         Category category = null;
         for (Category dbCategory : entity.getCategories()) {
-          if (dbCategory.getId() == ct.getId()) {
+          if (dbCategory.getId() == ct.getId() && ct.getRemove()) {
             category = dbCategory;
             break;
           }
         }
 
-        if (category != null) {
-          if (ct.getRemove()) {
-            entity.getCategories().remove(category);
-          } else {
-            entity.getCategories().add(category);
+        if (category != null && ct.getRemove()) {
+          entity.getCategories().remove(category);
+        } else if (category == null && !ct.getRemove()) {
+          Optional<Category> oCategory = categoryRepository.findById(ct.getId());
+          if (oCategory.isPresent()) {
+            entity.getCategories().add(oCategory.get());
           }
         }
       }
     }
 
     // Kép áthelyezés ideiglenes helyről
-
     hu.marko.szakdolgozat.spring.repository.model.Series savedEntity = seriesRepository.save(entity);
+
     if (savedEntity != null) {
       return true;
     }

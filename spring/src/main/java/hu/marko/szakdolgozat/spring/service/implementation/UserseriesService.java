@@ -84,7 +84,7 @@ public class UserseriesService implements UserSeriesService {
       throw new NotFoundException("Couldn't find user or series!");
     }
 
-    Optional<Userseries> oUserseries = userseriesRepository.findByUserAndSeriesOptional(oUser.get(), oSeries.get());
+    Optional<Userseries> oUserseries = userseriesRepository.findByUserAndSeries(oUser.get(), oSeries.get());
     if (!oUserseries.isPresent()) {
       throw new NotFoundException("There is no such userseries!");
     }
@@ -100,7 +100,7 @@ public class UserseriesService implements UserSeriesService {
       throw new NotFoundException("Couldn't find user or series!");
     }
 
-    Optional<Userseries> oUserseries = userseriesRepository.findByUserAndSeriesOptional(oUser.get(), oSeries.get());
+    Optional<Userseries> oUserseries = userseriesRepository.findByUserAndSeries(oUser.get(), oSeries.get());
     if (oUserseries.isPresent()) {
       throw new NotFoundException("This userseries is already saved!");
     }
@@ -127,7 +127,7 @@ public class UserseriesService implements UserSeriesService {
       throw new NotFoundException("Couldn't find user or series!");
     }
 
-    Optional<Userseries> oUserseries = userseriesRepository.findByUserAndSeriesOptional(oUser.get(), oSeries.get());
+    Optional<Userseries> oUserseries = userseriesRepository.findByUserAndSeries(oUser.get(), oSeries.get());
     if (!oUserseries.isPresent()) {
       throw new NotFoundException("There is no userseries with such ");
     }
@@ -164,7 +164,7 @@ public class UserseriesService implements UserSeriesService {
       throw new NotFoundException("Couldn't find user or series!");
     }
 
-    Optional<Userseries> oUserseries = userseriesRepository.findByUserAndSeriesOptional(oUser.get(), oSeries.get());
+    Optional<Userseries> oUserseries = userseriesRepository.findByUserAndSeries(oUser.get(), oSeries.get());
     if (!oUserseries.isPresent()) {
       throw new NotFoundException("There is no such userseries!");
     }

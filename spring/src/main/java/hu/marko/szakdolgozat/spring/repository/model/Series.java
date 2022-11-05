@@ -7,16 +7,18 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,26 +34,29 @@ public class Series {
   private Long id;
   @Column(nullable = false)
   private String title;
-  @Column(nullable = false)
   @Min(1900)
+  @Column(nullable = false, columnDefinition = "year(4)")
   private Integer prodYear;
-  @Column(nullable = false)
   @Min(1)
+  @Column(nullable = false)
   private Integer ageLimit;
-  @Column(nullable = false)
   @Min(1)
+  @Column(nullable = false)
   private Integer length;
   @CreationTimestamp
   @Column(updatable = false, columnDefinition = "datetime(6) default CURRENT_TIMESTAMP(6)")
   private Date added;
-  @OneToMany(mappedBy = "series", targetEntity = Season.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "series", targetEntity = Season.class, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Season> seasons;
   @ManyToMany
   @JoinTable(name = "series_categories_category", joinColumns = @JoinColumn(name = "series_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
   private Set<Category> categories;
-  @OneToMany(mappedBy = "series", targetEntity = Newsfeed.class, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "series", targetEntity = Newsfeed.class)
+  @JsonIgnore
   private List<Newsfeed> newsfeeds;
-  @OneToMany(mappedBy = "series", targetEntity = Userseries.class, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "series", targetEntity = Userseries.class)
+
   private List<Userseries> userserieses;
-  // private Image image;
+  @OneToOne(cascade = CascadeType.ALL)
+  private Image image;
 }

@@ -1,7 +1,7 @@
 import { iNewsFeedService } from '../service/NewsFeedService';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { errorHandler } from './errorHandler';
-import { NewsFeed } from '../entity/NewsFeed';
+import { Newsfeed } from '../entity/Newsfeed';
 
 export default class NewsFeedHandler {
   private service: iNewsFeedService;
@@ -44,7 +44,7 @@ export default class NewsFeedHandler {
     }
   }
 
-  save = async (req: FastifyRequest<{ Body: NewsFeed }>, res: FastifyReply) => {
+  save = async (req: FastifyRequest<{ Body: Newsfeed }>, res: FastifyReply) => {
     try {
       const newsfeed = await this.service.save(req.body);
       return res.status(201).send({ newsfeed });
@@ -53,7 +53,7 @@ export default class NewsFeedHandler {
     }
   }
 
-  update = async (req: FastifyRequest<{ Params: { id: number }, Body: NewsFeed }>, res: FastifyReply) => {
+  update = async (req: FastifyRequest<{ Params: { id: number }, Body: Newsfeed }>, res: FastifyReply) => {
     const { id } = req.params;
 
     try {

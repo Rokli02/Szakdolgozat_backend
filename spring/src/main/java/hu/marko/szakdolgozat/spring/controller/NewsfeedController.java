@@ -62,13 +62,13 @@ public class NewsfeedController {
     return ResponseEntity.ok().body(new NewsfeedsWrapper(null, -1L));
   }
 
-  @PostMapping("")
+  @PostMapping("/edit")
   public ResponseEntity<NewsfeedWrapper> saveNewsfeed(@RequestBody @NotNull NewNewsfeed newNewsfeed) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(new NewsfeedWrapper(new Newsfeed(newsfeedService.save(newNewsfeed.toServiceNewsfeed()))));
   }
 
-  @PutMapping("/{id}")
+  @PutMapping("/edit/{id}")
   public ResponseEntity<Message> updateNewsfeed(@PathVariable("id") @NotNull Long id,
       @RequestBody @NotNull Newsfeed newsfeed) {
     if (newsfeedService.update(id, newsfeed.toServiceNewsfeed())) {
@@ -77,7 +77,7 @@ public class NewsfeedController {
     return ResponseEntity.badRequest().body(new Message("Couldn't update newsfeed!"));
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/edit/{id}")
   public ResponseEntity<Message> deleteNewsfeed(@PathVariable("id") @NotNull Long id) {
     if (newsfeedService.remove(id) != null) {
       return ResponseEntity.ok().body(new Message("Newsfeed is deleted successfully!"));

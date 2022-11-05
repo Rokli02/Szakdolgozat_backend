@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { NewsFeed } from '../entity/NewsFeed';
+import { Newsfeed } from '../entity/Newsfeed';
 import { iNewsFeedService } from '../service/NewsFeedService';
 
 export class NewsFeedController {
@@ -43,7 +43,7 @@ export class NewsFeedController {
     }
   }
 
-  save = async (req: Request<any, any, NewsFeed>, res: Response, next: NextFunction) => {
+  save = async (req: Request<any, any, Newsfeed>, res: Response, next: NextFunction) => {
     try {
       const newsfeed = await this.service.save(req.body);
       return res.status(201).json({ newsfeed });
@@ -52,7 +52,7 @@ export class NewsFeedController {
     }
   }
 
-  update = async (req: Request<{id: number}, any, NewsFeed>, res: Response, next: NextFunction) => {
+  update = async (req: Request<{id: number}, any, Newsfeed>, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     try {

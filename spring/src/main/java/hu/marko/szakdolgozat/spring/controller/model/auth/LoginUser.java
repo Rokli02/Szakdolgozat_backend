@@ -1,7 +1,6 @@
 package hu.marko.szakdolgozat.spring.controller.model.auth;
 
 import java.io.Serializable;
-import java.sql.Date;
 
 import hu.marko.szakdolgozat.spring.controller.model.Role;
 import lombok.AllArgsConstructor;
@@ -16,5 +15,5 @@ public class LoginUser implements Serializable {
   private String username;
   private String email;
   private Role role;
-  private Date created;
+  private String created;
 }

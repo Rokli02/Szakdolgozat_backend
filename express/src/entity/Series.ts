@@ -1,9 +1,9 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Category } from './Category';
 import { Image } from './Image';
-import { NewsFeed } from './NewsFeed';
+import { Newsfeed } from './Newsfeed';
 import { Season } from './Season';
-import { UserSeries } from './UserSeries';
+import { Userseries } from './Userseries';
 
 @Entity()
 export class Series {
@@ -15,11 +15,15 @@ export class Series {
 
   @Column({
     type: 'year',
-    nullable: false
+    nullable: false,
+    name: "prod_year"
   })
   prodYear: number;
 
-  @Column({nullable: false})
+  @Column({
+    nullable: false,
+    name: "age_limit"
+  })
   ageLimit: number;
 
   @Column({nullable: false})
@@ -28,8 +32,8 @@ export class Series {
   @CreateDateColumn()
   added: string;
 
-  @OneToMany(() => NewsFeed, feed => feed.series)
-  newsfeeds: NewsFeed[];
+  @OneToMany(() => Newsfeed, feed => feed.series)
+  newsfeeds: Newsfeed[];
 
   @OneToMany(() => Season, season => season.series, {
     cascade: ['insert', 'update'],
@@ -40,17 +44,22 @@ export class Series {
   @ManyToMany(() => Category, category => category.serieses, {
     cascade: true
   })
-  @JoinTable()
+  @JoinTable({
+    joinColumn: { name: "series_id" },
+    inverseJoinColumn: { name: "category_id" }
+  })
   categories: Category[]
 
-  @OneToMany(() => UserSeries, feed => feed.series)
-  userserieses: UserSeries[];
+  @OneToMany(() => Userseries, feed => feed.series)
+  userserieses: Userseries[];
 
   @OneToOne(() => Image, image => image.series, {
     nullable: true,
     eager: true,
     cascade: true
   })
-  @JoinColumn()
+  @JoinColumn({
+    name: "image_id"
+  })
   image: Image;
 }

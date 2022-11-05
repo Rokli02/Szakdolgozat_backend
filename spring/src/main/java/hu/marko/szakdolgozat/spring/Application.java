@@ -5,7 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 // import org.springframework.context.annotation.Bean;
 // import org.springframework.boot.CommandLineRunner;
+
+// import hu.marko.szakdolgozat.spring.repository.RoleRepository;
+// import hu.marko.szakdolgozat.spring.repository.model.Role;
 // import hu.marko.szakdolgozat.spring.service.AuthorizationService;
+// import hu.marko.szakdolgozat.spring.service.model.User;
 
 @SpringBootApplication
 public class Application {
@@ -15,14 +19,12 @@ public class Application {
 	}
 
 	// @Bean
-	// CommandLineRunner runner(AuthorizationService authorizationService) {
+	// CommandLineRunner runner(AuthorizationService authorizationService,
+	// RoleRepository roleRepository) {
 	// return args -> {
-	// authorizationService
-	// .signup(new User(null, "Kerék Béla", "kbla", "kbla@username.com",
-	// "2000-10-19", "123", null, null, null));
-	// authorizationService.signup(
-	// new User(null, "Keréktelen Áron", "aronka", "kl-aron@username.go",
-	// "1986-06-22", "123", null, null, null));
+	// roleRepository.save(new Role(1L, "user"));
+	// roleRepository.save(new Role(2L, "siteManager"));
+	// roleRepository.save(new Role(3L, "admin"));
 	// };
 	// }
 }

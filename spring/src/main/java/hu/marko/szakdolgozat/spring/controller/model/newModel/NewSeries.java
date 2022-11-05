@@ -35,6 +35,7 @@ public class NewSeries {
   // private Image image;
 
   public hu.marko.szakdolgozat.spring.service.model.Series toServiceSeries() {
+    System.out.println("\ntoServiceSeries:\n" + this.toString() + "\n");
     List<hu.marko.szakdolgozat.spring.service.model.Season> serviceSeasons = StreamSupport
         .stream(seasons.spliterator(), false).map((sn) -> sn.toServiceSeason()).collect(Collectors.toList());
     Set<hu.marko.szakdolgozat.spring.service.model.Category> serviceCategories = StreamSupport

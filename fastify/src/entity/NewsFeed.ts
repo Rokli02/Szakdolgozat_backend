@@ -1,8 +1,8 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Series } from './Series';
 
 @Entity()
-export class NewsFeed {
+export class Newsfeed {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,5 +19,6 @@ export class NewsFeed {
     nullable: false,
     onDelete: 'CASCADE'
   })
+  @JoinColumn({ name: "series_id" })
   series: Series;
 }

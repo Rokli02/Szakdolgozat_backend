@@ -105,6 +105,7 @@ public class NewsfeedService implements hu.marko.szakdolgozat.spring.service.New
     if (!oSeries.isPresent()) {
       throw new NotFoundException("Couldn't find news' series!");
     }
+    entity.setSeries(oSeries.get());
 
     hu.marko.szakdolgozat.spring.repository.model.Newsfeed savedEntity = newsfeedRepository.save(entity);
     return new Newsfeed(savedEntity);
@@ -117,7 +118,7 @@ public class NewsfeedService implements hu.marko.szakdolgozat.spring.service.New
       throw new NotFoundException("There is no newsfeed with such ID!");
     }
     hu.marko.szakdolgozat.spring.repository.model.Newsfeed entity = oNewsfeed.get();
-    Optional<Series> oSeries = seriesRepository.findById(entity.getId());
+    Optional<Series> oSeries = seriesRepository.findById(newsfeed.getSeries().getId());
     if (!oSeries.isPresent()) {
       throw new NotFoundException("Couldn't find news' series!");
     }
@@ -127,6 +128,9 @@ public class NewsfeedService implements hu.marko.szakdolgozat.spring.service.New
     }
     if (newsfeed.getDescription() != null) {
       entity.setDescription(newsfeed.getDescription());
+    }
+    if (entity.getSeries().getId() != oSeries.get().getId()) {
+      entity.setSeries(oSeries.get());
     }
 
     hu.marko.szakdolgozat.spring.repository.model.Newsfeed savedEntity = newsfeedRepository.save(entity);

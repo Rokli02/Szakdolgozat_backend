@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { UserSeries } from '../entity/UserSeries';
+import { Userseries } from '../entity/Userseries';
 import { iUserSeriesService } from '../service/UserSeriesService';
 
 export class UserSeriesController {
@@ -35,7 +35,7 @@ export class UserSeriesController {
     }
   }
 
-  save = async (req: Request<any, any, UserSeries>, res: Response, next: NextFunction) => {
+  save = async (req: Request<any, any, Userseries>, res: Response, next: NextFunction) => {
     const userId = req.user.id;
 
     try {
@@ -46,7 +46,7 @@ export class UserSeriesController {
     }
   }
 
-  update = async (req: Request<{id: number}, any, UserSeries>, res: Response, next: NextFunction) => {
+  update = async (req: Request<{id: number}, any, Userseries>, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const userId = req.user.id;
 

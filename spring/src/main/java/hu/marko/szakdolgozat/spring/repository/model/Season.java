@@ -2,6 +2,7 @@ package hu.marko.szakdolgozat.spring.repository.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -29,12 +30,12 @@ public class Season {
   @Column(nullable = false)
   @Min(1)
   private Integer episode;
-  @ManyToOne(targetEntity = Series.class)
-  @JoinColumn(name = "series_id", nullable = false)
+  @ManyToOne(targetEntity = Series.class, optional = false, fetch = FetchType.LAZY)
+  @JoinColumn(name = "series_id")
   private Series series;
 
-  public Season(hu.marko.szakdolgozat.spring.service.model.Season season,
-      hu.marko.szakdolgozat.spring.service.model.Series series) {
-    this(season.getId(), season.getSeason(), season.getEpisode(), series.toEntity());
+  @Override
+  public String toString() {
+    return String.format("Season: {id: %d, season: %d, episode: %d}", id, season, episode);
   }
 }
