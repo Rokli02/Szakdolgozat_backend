@@ -3,8 +3,8 @@ package hu.marko.szakdolgozat.spring.repository.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
@@ -17,15 +17,14 @@ import lombok.NoArgsConstructor;
 @Data
 public class Image {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String name;
   @Column(columnDefinition = "varchar(255) NOT NULL default '0px'")
   private String x_offset;
   @Column(columnDefinition = "varchar(255) NOT NULL default '0px'")
   private String y_offset;
-  @OneToOne(optional = false)
-  @JoinColumn(name = "id", nullable = true)
+  @OneToOne(optional = false, mappedBy = "image")
   private Series series;
 }

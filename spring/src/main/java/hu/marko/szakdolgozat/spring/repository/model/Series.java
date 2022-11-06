@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -30,7 +31,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class Series {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @Column(nullable = false)
   private String title;
@@ -49,14 +50,14 @@ public class Series {
   @OneToMany(mappedBy = "series", targetEntity = Season.class, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Season> seasons;
   @ManyToMany
-  @JoinTable(name = "series_categories_category", joinColumns = @JoinColumn(name = "series_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+  @JoinTable(name = "series_categories_category", joinColumns = @JoinColumn(name = "f_series_id"), inverseJoinColumns = @JoinColumn(name = "f_category_id"))
   private Set<Category> categories;
   @OneToMany(mappedBy = "series", targetEntity = Newsfeed.class)
   @JsonIgnore
   private List<Newsfeed> newsfeeds;
   @OneToMany(mappedBy = "series", targetEntity = Userseries.class)
-
   private List<Userseries> userserieses;
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL, optional = true)
+  @JoinColumn(name = "f_image_id", unique = true, nullable = true)
   private Image image;
 }

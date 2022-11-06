@@ -53,9 +53,9 @@ export class NewsFeedService implements iNewsFeedService {
     if(filter) {
       const fields: string[] = ['series.title', 'newsfeed.title', 'newsfeed.modification'];
       const whereStatement = makeStringOrWhere(filter, fields);
-      query.where(`userseries.user_id = ${userId} AND ${whereStatement}`)
+      query.where(`userseries.f_user_id = ${userId} AND ${whereStatement}`)
     } else {
-      query.where('userseries.user_id = :userId', {userId});
+      query.where('userseries.f_user_id = :userId', {userId});
     }
 
     if(order) {

@@ -6,7 +6,6 @@ export function errorHandler(err: Error, req: Request, res: Response, next: Next
     return res.status(500).json({ message: err, reason: 'Couldn\'t find error name!' })
   }
 
-  
   switch(err.name) {
     case "JsonWebTokenError":
       return res.status(401).json({ message: "Token is invalid!" });

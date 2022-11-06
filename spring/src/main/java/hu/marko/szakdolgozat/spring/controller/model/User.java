@@ -25,6 +25,6 @@ public class User {
 
   public hu.marko.szakdolgozat.spring.service.model.User toServiceUser() {
     return new hu.marko.szakdolgozat.spring.service.model.User(id, name, username, email, birthdate, password,
-        role.toServiceRole(), null, active); // new Date(new java.util.Date(created).getTime())
+        role.toServiceRole(), null, active);
   }
 }

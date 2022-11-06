@@ -45,7 +45,7 @@ public class NewsfeedService implements hu.marko.szakdolgozat.spring.service.New
     }
     String interOrder = "id";
     if (order != null) {
-      interOrder = order;
+      interOrder = getOrder(order);
     }
 
     Page<hu.marko.szakdolgozat.spring.repository.model.Newsfeed> pagedEntity = newsfeedRepository
@@ -60,31 +60,36 @@ public class NewsfeedService implements hu.marko.szakdolgozat.spring.service.New
   @Override
   public PageModel<Newsfeed> findByUserAndPageAndSizeAndFilterAndOrder(Long userid, Integer page, Integer size,
       String filter, String order, Boolean ascendingDirection) {
-
+    System.out.println("\n\nUserId:\n" + userid);
     Optional<User> oUser = userRepository.findById(userid);
     if (!oUser.isPresent()) {
       throw new NotFoundException("Valami hiba lépett fel, jelentkezz be újra!");
     }
 
-    // TODO: Implement after UserSeries is implemented
+    Direction direction;
+    if (ascendingDirection == null || !ascendingDirection) {
+      direction = Direction.DESC;
+    } else {
+      direction = Direction.ASC;
+    }
 
-    // Direction direction;
-    // if (ascendingDirection == null || !ascendingDirection) {
-    // direction = Direction.DESC;
-    // } else {
-    // direction = Direction.ASC;
-    // }
+    String interFilter = "";
+    if (filter != null) {
+      interFilter = filter;
+    }
+    String interOrder = "id";
+    if (order != null) {
+      interOrder = getOrder(order);
+    }
 
-    // String interFilter = "";
-    // if (filter != null) {
-    // interFilter = filter;
-    // }
-    // String interOrder = "id";
-    // if (order != null) {
-    // interOrder = order;
-    // }
+    Page<hu.marko.szakdolgozat.spring.repository.model.Newsfeed> pagedEntity = newsfeedRepository
+        .findPersonalWithPagination(PageRequest.of(page - 1, size, Sort.by(direction, interOrder)), interFilter,
+            userid);
 
-    return null;
+    List<Newsfeed> newsfeedList = StreamSupport.stream(pagedEntity.getContent().spliterator(), false).map(Newsfeed::new)
+        .collect(Collectors.toList());
+    PageModel<Newsfeed> pageModel = new PageModel<>(newsfeedList, pagedEntity.getTotalElements());
+    return pageModel;
   }
 
   @Override
@@ -152,4 +157,12 @@ public class NewsfeedService implements hu.marko.szakdolgozat.spring.service.New
     return id;
   }
 
+  private String getOrder(String rawOrder) {
+    switch (rawOrder) {
+      case "series":
+        return "s.title";
+      default:
+        return rawOrder;
+    }
+  }
 }

@@ -28,7 +28,7 @@ public class Series {
   private String added;
   private List<Season> seasons;
   private Set<Category> categories;
-  // private Image image;
+  private Image image;
 
   public Series(hu.marko.szakdolgozat.spring.service.model.Series series) {
     List<Season> seasonsList;
@@ -51,9 +51,10 @@ public class Series {
     this.prodYear = series.getProdYear();
     this.ageLimit = series.getAgeLimit();
     this.length = series.getLength();
-    this.added = series.getAdded().toString();
+    this.added = series.getAdded() != null ? series.getAdded().toString() : null;
     this.seasons = seasonsList;
     this.categories = categories;
+    this.image = series.getImage() != null ? new Image(series.getImage()) : null;
   }
 
   public hu.marko.szakdolgozat.spring.service.model.Series toServiceSeries() {
@@ -74,7 +75,7 @@ public class Series {
     }
 
     return new hu.marko.szakdolgozat.spring.service.model.Series(id, title, prodYear, ageLimit, length,
-        null,
-        serviceSeasons, serviceCategories);
+        null, serviceSeasons, serviceCategories,
+        image != null ? image.toServiceImage() : null);
   }
 }

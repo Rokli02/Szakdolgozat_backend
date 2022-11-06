@@ -17,6 +17,6 @@ export class Season {
       nullable: false,
       onDelete: 'CASCADE'
     })
-    @JoinColumn({ name: "series_id" })
+    @JoinColumn({ name: "f_series_id" })
     series: Series;
 }

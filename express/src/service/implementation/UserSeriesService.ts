@@ -22,7 +22,7 @@ export class UserSeriesService implements iUserSeriesService {
     .skip((page - 1) * size)
     .take(size);
 
-    let baseWhereStatement: string = `userseries.user_id = ${userId}`;
+    let baseWhereStatement: string = `userseries.f_user_id = ${userId}`;
 
     if(status) {
       baseWhereStatement += ` AND status.id = ${status}`;

@@ -14,7 +14,7 @@ export class Userseries {
     onDelete: 'CASCADE'
   })
   @JoinColumn({
-    name: "user_id"
+    name: "f_user_id"
   })
   user: User;
 
@@ -22,7 +22,7 @@ export class Userseries {
     nullable: false
   })
   @JoinColumn({
-    name: "series_id"
+    name: "f_series_id"
   })
   series: Series;
 
@@ -30,7 +30,7 @@ export class Userseries {
     nullable: false
   })
   @JoinColumn({
-    name: "status_id"
+    name: "f_status_id"
   })
   status: Status;
 

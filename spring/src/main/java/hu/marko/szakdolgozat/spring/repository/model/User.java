@@ -5,6 +5,7 @@ import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -23,10 +24,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @NotBlank
-  @Column(nullable = false)
+  @Column(nullable = false, columnDefinition = "bigint(20) AUTO_INCREMENT")
   private String name;
   @NotBlank
   @Column(columnDefinition = "date")
@@ -39,6 +40,7 @@ public class User {
   @Column(unique = true, nullable = false)
   private String email;
   @NotBlank
+  @Column(nullable = false)
   private String password;
   @Column(columnDefinition = "boolean default true")
   private Boolean active;
@@ -46,6 +48,6 @@ public class User {
   @Column(updatable = false, columnDefinition = "datetime(6) default CURRENT_TIMESTAMP(6)")
   private Date created;
   @ManyToOne
-  @JoinColumn(name = "role_id", nullable = false)
+  @JoinColumn(name = "f_role_id", nullable = false)
   private Role role;
 }

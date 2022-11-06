@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class UserSeries {
   private Long id;
-  private User user;
   private Series series;
   private Status status;
   private Integer season;
@@ -17,13 +16,15 @@ public class UserSeries {
   private String modification;
 
   public UserSeries(hu.marko.szakdolgozat.spring.service.model.UserSeries userSeries) {
-    this(userSeries.getId(), new User(userSeries.getUser()), new Series(userSeries.getSeries()),
-        new Status(userSeries.getStatus()), userSeries.getSeason(), userSeries.getEpisode(),
-        userSeries.getModification());
+    this(userSeries.getId(), new Series(userSeries.getSeries()),
+        new Status(userSeries.getStatus()), userSeries.getSeason(),
+        userSeries.getEpisode(), userSeries.getModification());
   }
 
   public hu.marko.szakdolgozat.spring.service.model.UserSeries toServiceUserseries() {
-    return new hu.marko.szakdolgozat.spring.service.model.UserSeries(id, user.toServiceUser(), series.toServiceSeries(),
-        status.toServiceStatus(), season, episode, modification);
+    return new hu.marko.szakdolgozat.spring.service.model.UserSeries(id,
+        series != null ? series.toServiceSeries() : null,
+        status != null ? status.toServiceStatus() : null,
+        season, episode, modification);
   }
 }

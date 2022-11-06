@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import hu.marko.szakdolgozat.spring.controller.model.Category;
+import hu.marko.szakdolgozat.spring.controller.model.Image;
 import hu.marko.szakdolgozat.spring.controller.model.Season;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,15 +33,14 @@ public class NewSeries {
   private Integer length;
   private List<Season> seasons;
   private Set<Category> categories;
-  // private Image image;
+  private Image image;
 
   public hu.marko.szakdolgozat.spring.service.model.Series toServiceSeries() {
-    System.out.println("\ntoServiceSeries:\n" + this.toString() + "\n");
     List<hu.marko.szakdolgozat.spring.service.model.Season> serviceSeasons = StreamSupport
         .stream(seasons.spliterator(), false).map((sn) -> sn.toServiceSeason()).collect(Collectors.toList());
     Set<hu.marko.szakdolgozat.spring.service.model.Category> serviceCategories = StreamSupport
         .stream(categories.spliterator(), false).map(Category::toServiceCategory).collect(Collectors.toSet());
     return new hu.marko.szakdolgozat.spring.service.model.Series(null, title, prodYear, ageLimit, length, null,
-        serviceSeasons, serviceCategories);
+        serviceSeasons, serviceCategories, image.toServiceImage());
   }
 }

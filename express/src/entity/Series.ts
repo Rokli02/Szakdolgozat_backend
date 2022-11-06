@@ -45,8 +45,8 @@ export class Series {
     cascade: true
   })
   @JoinTable({
-    joinColumn: { name: "series_id" },
-    inverseJoinColumn: { name: "category_id" }
+    joinColumn: { name: "f_series_id" },
+    inverseJoinColumn: { name: "f_category_id" }
   })
   categories: Category[]
 
@@ -59,7 +59,7 @@ export class Series {
     cascade: true
   })
   @JoinColumn({
-    name: "image_id"
+    name: "f_image_id"
   })
   image: Image;
 }

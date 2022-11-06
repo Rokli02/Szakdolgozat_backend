@@ -49,11 +49,15 @@ public class UserseriesService implements UserSeriesService {
     if (filter != null) {
       interFilter = filter;
     }
-    String interOrder = "id";
+
+    String interOrder = "s.id";
     if (order != null) {
-      interOrder = order;
+      interOrder = getOrder(order);
     }
 
+    System.out.println(
+        String.format("\n\nDatas in service:\nUserId: %d\nPage: %d\nSize: %d\nFilter: %s\nStatus: %d\nOrder: %s\n",
+            userId, page, size, interFilter, status, interOrder));
     Page<Userseries> pagedEntity;
     if (status != null) {
       Optional<Status> oStatus = statusRepository.findById(status);
@@ -68,7 +72,9 @@ public class UserseriesService implements UserSeriesService {
       pagedEntity = userseriesRepository
           .findWithPagination(PageRequest.of(page - 1, size, Sort.by(direction, interOrder)), interFilter, userId);
     }
-
+    pagedEntity.getContent().stream().forEach(
+        us -> System.out.println(String.format("UserSeries: { SeriesId: %d, Title: %s, season: %d, episode: %d}",
+            us.getSeries().getId(), us.getSeries().getTitle(), us.getSeason(), us.getEpisode())));
     List<UserSeries> seriesList = StreamSupport.stream(pagedEntity.getContent().spliterator(), false)
         .map(UserSeries::new)
         .collect(Collectors.toList());
@@ -171,5 +177,22 @@ public class UserseriesService implements UserSeriesService {
 
     userseriesRepository.delete(oUserseries.get());
     return oUserseries.get().getId();
+  }
+
+  private String getOrder(String rawOrder) {
+    switch (rawOrder) {
+      case "title":
+        return "s.title";
+      case "age_limit":
+        return "s.age_limit";
+      case "length":
+        return "s.length";
+      case "modification":
+        return "modification";
+      case "prod_year":
+        return "s.prod_year";
+      default:
+        return "s.id";
+    }
   }
 }

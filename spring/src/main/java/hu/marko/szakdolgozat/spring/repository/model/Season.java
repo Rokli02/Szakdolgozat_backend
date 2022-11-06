@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,10 +20,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "season", "series_id" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "season", "f_series_id" }))
 public class Season {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @Column(nullable = false)
   @Min(1)
@@ -31,7 +32,7 @@ public class Season {
   @Min(1)
   private Integer episode;
   @ManyToOne(targetEntity = Series.class, optional = false, fetch = FetchType.LAZY)
-  @JoinColumn(name = "series_id")
+  @JoinColumn(name = "f_series_id")
   private Series series;
 
   @Override

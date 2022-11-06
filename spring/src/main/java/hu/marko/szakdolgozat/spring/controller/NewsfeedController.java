@@ -58,8 +58,11 @@ public class NewsfeedController {
       @RequestParam("filt") @Nullable String filt, @RequestParam("ordr") @Nullable String ordr,
       @RequestParam("dir") @Nullable Boolean dir, HttpServletRequest request) {
     Long userId = (Long) request.getAttribute("userId");
-    // TODO: Ha kész a Userseries, implementálni ezt
-    return ResponseEntity.ok().body(new NewsfeedsWrapper(null, -1L));
+    PageModel<hu.marko.szakdolgozat.spring.service.model.Newsfeed> pageModel = newsfeedService
+        .findByUserAndPageAndSizeAndFilterAndOrder(userId, page, size, filt, ordr, dir);
+    List<Newsfeed> newsfeedList = StreamSupport.stream(pageModel.getModels().spliterator(), false).map(Newsfeed::new)
+        .collect(Collectors.toList());
+    return ResponseEntity.ok().body(new NewsfeedsWrapper(newsfeedList, pageModel.getCount()));
   }
 
   @PostMapping("/edit")

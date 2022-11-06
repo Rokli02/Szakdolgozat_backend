@@ -31,10 +31,10 @@ export class User {
 
     @ManyToOne(() => Role, {
         nullable: false,
-        eager: true
+        eager: true,
     })
     @JoinColumn({
-        name: "role_id"
+        name: "f_role_id"
     })
     role: Role;
 }

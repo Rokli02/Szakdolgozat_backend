@@ -5,6 +5,7 @@ import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Newsfeed {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @Column(nullable = false)
   private String title;
@@ -31,6 +32,6 @@ public class Newsfeed {
   @Column(columnDefinition = "datetime(6) default CURRENT_TIMESTAMP(6)")
   private Date modification;
   @ManyToOne(targetEntity = Series.class)
-  @JoinColumn(name = "series_id", nullable = false)
+  @JoinColumn(name = "f_series_id", nullable = false)
   private Series series;
 }
