@@ -200,7 +200,6 @@ export class SeriesService implements iSeriesService {
       await this.imageService.removeImageFromDb(image.name);
       return true;
     } catch(err) {
-      console.log(err);
       throwError("400", "Something went wrong during image deletion!");
     }
   }
