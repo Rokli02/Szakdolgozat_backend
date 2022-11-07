@@ -17,7 +17,7 @@ export const seriesRoutes = () => {
   router.get("/:id", hasValidIdParameter, seriesController.one);
 
   //Protected
-  router.use(auth.verifyToken, auth.hasSiteManagerRight);
+  router.use(auth.hasSiteManagerRight);
   
   router.post("/", seriesFieldsRequired, validateSeriesFields, seriesController.save);
   router.put("/:id", hasValidIdParameter, validateSeriesFields, seriesController.update);

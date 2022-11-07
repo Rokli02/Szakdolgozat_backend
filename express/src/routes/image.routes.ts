@@ -9,7 +9,7 @@ export const imageRoutes = () => {
   const auth = new AuthorizationController(new AuthorizationSerivce());
 
   //Protected routes
-  router.use(auth.verifyToken, auth.hasSiteManagerRight);
+  router.use(auth.hasSiteManagerRight);
 
   router.post("/", imageController.upload);
 

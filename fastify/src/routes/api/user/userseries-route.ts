@@ -1,8 +1,7 @@
-import { FastifyInstance, FastifyPluginAsync, RegisterOptions } from 'fastify'
+import { FastifyInstance, FastifyPluginAsync, RegisterOptions } from 'fastify';
 import { UserSeriesHandler } from '../../../handlers/userseries-handler';
 import { validateUserSeriesFields } from '../../../handlers/validation-handler';
 import hasRight from '../../../plugins/hasRight';
-import tokenValidator from '../../../plugins/tokenValidator'
 import { response200WithIdSchema } from '../../../schemas/schemes';
 import { allUserseriesSchema, oneUserseriesSchema, saveUserseriesSchema, updateUserseriesSchema } from '../../../schemas/userseries-schema';
 import { UserSeriesService } from '../../../service/implementation/UserSeriesService';
@@ -14,7 +13,6 @@ const userSeriesRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): P
 }
 
 const privateUserSeriesRoutes = async (fastify: FastifyInstance, { userSeriesHandler }: { userSeriesHandler: UserSeriesHandler } & RegisterOptions) => {
-  await fastify.register(tokenValidator);
   await fastify.register(hasRight, { appropriateRight: ['user'] });
 
   fastify.get('/page/:page', {

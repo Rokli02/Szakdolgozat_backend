@@ -1,11 +1,10 @@
-import { FastifyInstance, FastifyPluginAsync } from 'fastify'
-import { SeriesHandler } from '../../../handlers/series-handler'
-import { validateSeriesFields } from '../../../handlers/validation-handler'
-import hasRight from '../../../plugins/hasRight'
-import tokenValidator from '../../../plugins/tokenValidator'
-import { response200WithIdSchema } from '../../../schemas/schemes'
-import { allSeriesSchema, oneSeriesSchema, saveSeriesSchema, updateSeriesSchema } from '../../../schemas/series-schema'
-import { SeriesService } from '../../../service/implementation/SeriesService'
+import { FastifyInstance, FastifyPluginAsync } from 'fastify';
+import { SeriesHandler } from '../../../handlers/series-handler';
+import { validateSeriesFields } from '../../../handlers/validation-handler';
+import hasRight from '../../../plugins/hasRight';
+import { response200WithIdSchema } from '../../../schemas/schemes';
+import { allSeriesSchema, oneSeriesSchema, saveSeriesSchema, updateSeriesSchema } from '../../../schemas/series-schema';
+import { SeriesService } from '../../../service/implementation/SeriesService';
 
 const seriesRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
   const seriesHandler: SeriesHandler = new SeriesHandler(new SeriesService());
@@ -22,7 +21,6 @@ const seriesRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Promi
 }
 
 async function privateSeriesRoutes(fastify: FastifyInstance, { seriesHandler }: { seriesHandler: SeriesHandler}) {
-  await fastify.register(tokenValidator);
   await fastify.register(hasRight, { appropriateRight: ['siteManager', 'admin'] })
 
   fastify.post('/', {

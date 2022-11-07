@@ -16,9 +16,12 @@ import * as fileUpload from "express-fileupload";
 import * as cors from 'cors';
 import path = require('path');
 import { imageRoutes } from './routes/image.routes';
+import { AuthorizationController } from './controller/AuthorizationController';
+import { AuthorizationSerivce } from './service/implementation/AuthorizationService';
 
   const app = express();
   const PORT = process.env.PORT || 5001;
+  const auth = new AuthorizationController(new AuthorizationSerivce());
   
   app.use(express.json());
   app.use(cors());
@@ -31,6 +34,7 @@ import { imageRoutes } from './routes/image.routes';
     tempFileDir: path.join(__dirname, process.env.TEMP_IMAGE_DIR)
   }));
   
+  app.use(auth.verifyToken)
   app.use("/api/images/public" ,express.static(path.join(__dirname, process.env.IMAGE_DIR)));
   app.use('/api/auth', authRoutes());
   app.use('/api/users', userRoutes());

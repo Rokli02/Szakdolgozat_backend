@@ -1,9 +1,8 @@
-import { FastifyInstance, FastifyPluginAsync } from 'fastify'
-import CategoryHandler from '../../../handlers/category-handler'
-import hasRight from '../../../plugins/hasRight'
-import tokenValidator from '../../../plugins/tokenValidator'
-import { categoriesResponse, categoryBodyWithId, categoryBodyWithoutId } from '../../../schemas/category-schema'
-import { CategoryService } from '../../../service/implementation/CategoryService'
+import { FastifyInstance, FastifyPluginAsync } from 'fastify';
+import CategoryHandler from '../../../handlers/category-handler';
+import hasRight from '../../../plugins/hasRight';
+import { categoriesResponse, categoryBodyWithId, categoryBodyWithoutId } from '../../../schemas/category-schema';
+import { CategoryService } from '../../../service/implementation/CategoryService';
 
 const categoryRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
   const categoryHandler = new CategoryHandler(new CategoryService);
@@ -16,7 +15,6 @@ const categoryRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Pro
 }
 
 const privateCategoryRoutes = async(fastify: FastifyInstance, { categoryHandler }: { categoryHandler: CategoryHandler }) => {
-  await fastify.register(tokenValidator);
   await fastify.register(hasRight, { appropriateRight: ['siteManager', 'admin'] });
 
   fastify.post('/', {

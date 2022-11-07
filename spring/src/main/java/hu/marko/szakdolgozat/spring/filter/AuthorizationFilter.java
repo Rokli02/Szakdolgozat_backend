@@ -28,7 +28,7 @@ import hu.marko.szakdolgozat.spring.service.AuthorizationService;
 import hu.marko.szakdolgozat.spring.service.model.User;
 
 public class AuthorizationFilter extends OncePerRequestFilter {
-  private final String JWT_TOKEN_SECRET = "secrEtOfJWTokN_123456";
+  private final String JWT_TOKEN_SECRET = "secretKey_Of-TokEn123";
   private AuthorizationService authService;
 
   public AuthorizationFilter(AuthorizationService authService) {

@@ -53,22 +53,21 @@ export class AuthorizationController {
 
   verifyToken = async (req: Request<{ authorization?: string }>, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
-    if(!authorization) {
-      return res.status(401).json({ message: 'You must sign in first!'});
-    }
 
-    try {
-      const user = await this.service.verifyUserToken(authorization);
-      req.user = user;
-      next();
-    } catch(err) {
-      return next(err);
+    if(authorization && !req.baseUrl.includes("api/auth")) {
+      try {
+        const user = await this.service.verifyUserToken(authorization);
+        req.user = user;
+        next();
+      } catch(err) {
+        return next(err);
+      }
     }
   }
 
   hasUserRight = (req: Request, res: Response, next: NextFunction) => {
     if(!req.user) {
-      return res.status(401).json({message: 'Some problem occured during right query!'});
+      return res.status(401).json({message: 'You must login first!'});
     }
 
     if(!this.service.hasRight(req.user, 'user')) {
@@ -80,7 +79,7 @@ export class AuthorizationController {
 
   hasAdminRight = (req: Request, res: Response, next: NextFunction) => {
     if(!req.user) {
-      return res.status(401).json({message: 'Some problem occured during right query!'});
+      return res.status(401).json({message: 'You must login first!'});
     }
 
     if(!this.service.hasRight(req.user, 'admin')) {
@@ -92,7 +91,7 @@ export class AuthorizationController {
 
   hasSiteManagerRight = (req: Request, res: Response, next: NextFunction) => {
     if(!req.user) {
-      return res.status(401).json({message: 'Some problem occured during right query!'});
+      return res.status(401).json({message: 'You must login first!'});
     }
 
     if(!this.service.hasRight(req.user, 'siteManager') && 

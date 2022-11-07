@@ -28,7 +28,7 @@ import hu.marko.szakdolgozat.spring.filter.model.UserDetailsModel;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private final AuthenticationManager authenticationManager;
-  private final String JWT_TOKEN_SECRET = "secrEtOfJWTokN_123456";
+  private final String JWT_TOKEN_SECRET = "secretKey_Of-TokEn123";
 
   public AuthenticationFilter(AuthenticationManager authenticationManager) {
     this.authenticationManager = authenticationManager;

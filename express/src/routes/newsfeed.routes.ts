@@ -24,7 +24,7 @@ export const newsfeedRoutes = () => {
 const privateUserRoutes = (newsfeedController: NewsFeedController) => {
   const router = Router();
   const auth = new AuthorizationController(new AuthorizationSerivce());
-  router.use(auth.verifyToken, auth.hasUserRight);
+  router.use(auth.hasUserRight);
   
   router.get('/page/:page', hasValidPageAndSize, newsfeedController.allPersonal);
 
@@ -34,7 +34,7 @@ const privateUserRoutes = (newsfeedController: NewsFeedController) => {
 const privateSiteManagerRoutes = (newsfeedController: NewsFeedController) => {
   const router = Router();
   const auth = new AuthorizationController(new AuthorizationSerivce());
-  router.use(auth.verifyToken, auth.hasSiteManagerRight);
+  router.use(auth.hasSiteManagerRight);
 
   router.post('/', newfeedFieldsRequired, newsfeedFieldsValid, newsfeedController.save);
   router.put('/:id', hasValidIdParameter, newsfeedFieldsValid, newsfeedController.update);

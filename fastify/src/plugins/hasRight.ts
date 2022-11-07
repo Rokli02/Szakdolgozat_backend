@@ -4,7 +4,7 @@ import fp from 'fastify-plugin';
 export default fp(async (fastify: FastifyInstance, opts: { appropriateRight: string[] }) => {
   fastify.addHook('preHandler', async (req: FastifyRequest, res: FastifyReply) => {
     if(!req.user) {
-      return res.status(401).send({ message: 'You have to login first!' });
+      return res.status(401).send({ message: 'You must to login first!' });
     }
 
     const ownedRight = req.user.role.name;

@@ -11,7 +11,7 @@ export const userRoutes = () => {
   const userController = new UserController(new UserService());
   const auth = new AuthorizationController(new AuthorizationSerivce());
   
-  router.use(auth.verifyToken, auth.hasAdminRight);
+  router.use(auth.hasAdminRight);
   
   router.get("/page/:page", hasValidPageAndSize,  userController.all);
   router.get("/:id", hasValidIdParameter, userController.one);

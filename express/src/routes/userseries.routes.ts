@@ -11,7 +11,7 @@ export const userSeriesRoutes = () => {
   const userseriesController = new UserSeriesController(new UserSeriesService());
   const auth = new AuthorizationController(new AuthorizationSerivce());
   
-  router.use(auth.verifyToken, auth.hasUserRight);
+  router.use(auth.hasUserRight);
 
   router.get("/page/:page", hasValidPageAndSize, userseriesController.all);
   router.get("/:id", hasValidIdParameter, userseriesController.one);

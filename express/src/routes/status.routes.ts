@@ -15,7 +15,7 @@ export const statusRoutes = () => {
   router.get('/', statusController.all);
 
   //Private
-  router.use(auth.verifyToken, auth.hasSiteManagerRight);
+  router.use(auth.hasSiteManagerRight);
 
   router.post('/', statusFieldsRequired, statusController.save);
   router.put('/:id', hasValidIdParameter, statusFieldsRequired, statusController.update);

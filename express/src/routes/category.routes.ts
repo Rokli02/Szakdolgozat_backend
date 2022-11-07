@@ -15,7 +15,7 @@ export const categoryRoutes = () => {
   router.get('/', categoryController.all);
 
   //Private
-  router.use(auth.verifyToken, auth.hasSiteManagerRight);
+  router.use(auth.hasSiteManagerRight);
 
   router.post('/', categoryFieldsRequired, categoryController.save);
   router.put('/:id', hasValidIdParameter, categoryFieldsRequired, categoryController.update);

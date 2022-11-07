@@ -1,10 +1,9 @@
-import { FastifyInstance, FastifyPluginAsync, FastifyRegisterOptions, RegisterOptions } from 'fastify'
-import NewsFeedHandler from '../../../handlers/newsfeed-handler'
-import hasRight from '../../../plugins/hasRight'
-import tokenValidator from '../../../plugins/tokenValidator'
-import { allNewsFeedSchema, oneNewsFeedSchema, saveNewsFeedSchema, updateNewsFeedSchema } from '../../../schemas/newsfeed-schema'
-import { response200WithIdSchema } from '../../../schemas/schemes'
-import { NewsFeedService } from '../../../service/implementation/NewsfeedService'
+import { FastifyInstance, FastifyPluginAsync, RegisterOptions } from 'fastify';
+import NewsFeedHandler from '../../../handlers/newsfeed-handler';
+import hasRight from '../../../plugins/hasRight';
+import { allNewsFeedSchema, oneNewsFeedSchema, saveNewsFeedSchema, updateNewsFeedSchema } from '../../../schemas/newsfeed-schema';
+import { response200WithIdSchema } from '../../../schemas/schemes';
+import { NewsFeedService } from '../../../service/implementation/NewsfeedService';
 
 const newsfeedRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
   const newsfeedHandler: NewsFeedHandler = new NewsFeedHandler(new NewsFeedService());
@@ -23,7 +22,6 @@ const newsfeedRoutes: FastifyPluginAsync = async (fastify: FastifyInstance): Pro
 }
 
 async function privateUserRoutes(fastify: FastifyInstance, { newsfeedHandler }: RegisterOptions & { newsfeedHandler: NewsFeedHandler }) {
-  await fastify.register(tokenValidator); 
   await fastify.register(hasRight, { appropriateRight: ['user'] });
 
   fastify.get('/page/:page', {
@@ -32,7 +30,6 @@ async function privateUserRoutes(fastify: FastifyInstance, { newsfeedHandler }: 
   })
 }
 async function privateSiteManagerRoutes(fastify: FastifyInstance, { newsfeedHandler }: RegisterOptions & { newsfeedHandler: NewsFeedHandler }) {
-  await fastify.register(tokenValidator);
   await fastify.register(hasRight, { appropriateRight: ['siteManager', 'admin'] });
 
   fastify.post('/', {
