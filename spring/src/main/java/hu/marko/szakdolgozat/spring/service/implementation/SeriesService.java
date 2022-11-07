@@ -20,6 +20,7 @@ import hu.marko.szakdolgozat.spring.repository.SeasonRepository;
 import hu.marko.szakdolgozat.spring.repository.SeriesRepository;
 import hu.marko.szakdolgozat.spring.repository.model.Category;
 import hu.marko.szakdolgozat.spring.repository.model.Season;
+import hu.marko.szakdolgozat.spring.service.ImageService;
 import hu.marko.szakdolgozat.spring.service.model.PageModel;
 import hu.marko.szakdolgozat.spring.service.model.Series;
 import hu.marko.szakdolgozat.spring.service.model.UpdateCategory;
@@ -32,6 +33,7 @@ public class SeriesService implements hu.marko.szakdolgozat.spring.service.Serie
   private SeriesRepository seriesRepository;
   private CategoryRepository categoryRepository;
   private SeasonRepository seasonRepository;
+  private ImageService imageService;
 
   @Override
   public PageModel<Series> findByPageAndSizeAndFilterAndOrder(Integer page, Integer size, String filter, String order,
@@ -78,6 +80,18 @@ public class SeriesService implements hu.marko.szakdolgozat.spring.service.Serie
     hu.marko.szakdolgozat.spring.repository.model.Series entity = series.toEntity();
     entity.setId(null);
 
+    // Kép áthelyezés ideiglenes helyről
+    if (series.getImage() != null) {
+      String newImageName = imageService.renameFromTempToPerm(series.getImage());
+      entity.getImage().setName(newImageName);
+      if (entity.getImage().getX_offset() == null) {
+        entity.getImage().setX_offset("0px");
+      }
+      if (entity.getImage().getY_offset() == null) {
+        entity.getImage().setY_offset("0px");
+      }
+    }
+
     // Kiszedjük a az évadokat
     List<Season> seasons = entity.getSeasons();
     entity.setSeasons(null);
@@ -96,8 +110,6 @@ public class SeriesService implements hu.marko.szakdolgozat.spring.service.Serie
     for (Season ss : savedSeasons) {
       savedEntity.getSeasons().add(ss);
     }
-
-    // Kép áthelyezés ideiglenes helyről
 
     return new Series(savedEntity);
   }
@@ -182,20 +194,67 @@ public class SeriesService implements hu.marko.szakdolgozat.spring.service.Serie
       }
     }
 
-    // Kép áthelyezés ideiglenes helyről
-    hu.marko.szakdolgozat.spring.repository.model.Series savedEntity = seriesRepository.save(entity);
+    if (series.getImage() != null) {
+      // Teljes update
+      if (series.getImage().getId() == null) {
+        if (entity.getImage() != null) {
+          imageService.removeImageFromFolder(entity.getImage().getName());
+        }
 
+        String newImageName = imageService.renameFromTempToPerm(series.getImage());
+        series.getImage().setName(newImageName);
+        entity.setImage(series.getImage().toEntity());
+        if (series.getImage().getX_offset() == null || series.getImage().getX_offset().isBlank()) {
+          entity.getImage().setX_offset("0px");
+        } else {
+          entity.getImage().setX_offset(series.getImage().getX_offset());
+        }
+
+        if (series.getImage().getY_offset() == null || series.getImage().getY_offset().isBlank()) {
+          entity.getImage().setY_offset("0px");
+        } else {
+          entity.getImage().setY_offset(series.getImage().getY_offset());
+        }
+      }
+      // Részleges update
+      else if (entity.getImage() != null) {
+        if (series.getImage().getX_offset() == null || series.getImage().getX_offset().isBlank()) {
+          entity.getImage().setX_offset("0px");
+        } else {
+          entity.getImage().setX_offset(series.getImage().getX_offset());
+        }
+
+        if (series.getImage().getY_offset() == null || series.getImage().getY_offset().isBlank()) {
+          entity.getImage().setY_offset("0px");
+        } else {
+          entity.getImage().setY_offset(series.getImage().getY_offset());
+        }
+      }
+    }
+
+    hu.marko.szakdolgozat.spring.repository.model.Series savedEntity = seriesRepository.save(entity);
     if (savedEntity != null) {
       return true;
     }
-
     return false;
   }
 
   @Override
   public Boolean deleteImage(Long seriesId) {
-    // TODO: Kép törlés
-    return null;
+    Optional<hu.marko.szakdolgozat.spring.repository.model.Series> oSeries = seriesRepository.findById(seriesId);
+    if (!oSeries.isPresent()) {
+      throw new NotFoundException("There is no such series!");
+    }
+    hu.marko.szakdolgozat.spring.repository.model.Series entity = oSeries.get();
+    String response = imageService.removeImageFromFolder(entity.getImage().getName());
+
+    if (response != null) {
+      entity.setImage(null);
+      seriesRepository.save(entity);
+      return true;
+    }
+
+    return false;
   }
 
 }

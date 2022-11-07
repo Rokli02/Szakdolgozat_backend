@@ -53,18 +53,30 @@ public class Series {
   }
 
   public hu.marko.szakdolgozat.spring.repository.model.Series toEntity() {
-    return new hu.marko.szakdolgozat.spring.repository.model.Series(id, title, prodYear, ageLimit, length,
-        null,
-        StreamSupport.stream(seasons.spliterator(), false)
-            .map((season) -> new hu.marko.szakdolgozat.spring.repository.model.Season(
-                season.getId(),
-                season.getSeason(), season.getEpisode(), null))
-            .collect(Collectors.toList()),
-        StreamSupport.stream(categories.spliterator(), false)
-            .map(cat -> new hu.marko.szakdolgozat.spring.repository.model.Category(
-                cat.getId(),
-                cat.getName()))
-            .collect(Collectors.toSet()),
-        null, null, image != null ? image.toEntity() : null);
+    List<hu.marko.szakdolgozat.spring.repository.model.Season> seasonList;
+    if (seasons != null) {
+      seasonList = StreamSupport.stream(seasons.spliterator(), false)
+          .map((season) -> new hu.marko.szakdolgozat.spring.repository.model.Season(
+              season.getId(),
+              season.getSeason(), season.getEpisode(), null))
+          .collect(Collectors.toList());
+    } else {
+      seasonList = new ArrayList<hu.marko.szakdolgozat.spring.repository.model.Season>();
+    }
+    Set<hu.marko.szakdolgozat.spring.repository.model.Category> categorySet;
+    if (categories != null) {
+      categorySet = StreamSupport.stream(categories.spliterator(), false)
+          .map(cat -> new hu.marko.szakdolgozat.spring.repository.model.Category(
+              cat.getId(),
+              cat.getName()))
+          .collect(Collectors.toSet());
+    } else {
+      categorySet = new HashSet<hu.marko.szakdolgozat.spring.repository.model.Category>();
+    }
+
+    return new hu.marko.szakdolgozat.spring.repository.model.Series(
+        id, title, prodYear, ageLimit, length, null,
+        seasonList, categorySet, null, null,
+        image != null ? image.toEntity() : null);
   }
 }

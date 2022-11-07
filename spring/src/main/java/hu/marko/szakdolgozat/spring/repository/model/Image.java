@@ -21,10 +21,10 @@ public class Image {
   private Long id;
   @Column(nullable = false, unique = true)
   private String name;
-  @Column(columnDefinition = "varchar(255) NOT NULL default '0px'")
-  private String x_offset;
-  @Column(columnDefinition = "varchar(255) NOT NULL default '0px'")
-  private String y_offset;
+  @Column(columnDefinition = "varchar(255) default '0px'")
+  private String x_offset = "0px";
+  @Column(columnDefinition = "varchar(255) default '0px'")
+  private String y_offset = "0px";
   @OneToOne(optional = false, mappedBy = "image")
   private Series series;
 }

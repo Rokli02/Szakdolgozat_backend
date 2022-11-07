@@ -66,7 +66,7 @@ public class ImageService implements hu.marko.szakdolgozat.spring.service.ImageS
       if (result == null) {
         throw new BadRequestException("File save failed!");
       } else {
-        return "File saved succesfully!";
+        return preName.getName() + preName.getExtensionFromMimeType();
       }
     } catch (IOException exc) {
       throw new BadRequestException("Something went wrong during file save!");
@@ -75,14 +75,16 @@ public class ImageService implements hu.marko.szakdolgozat.spring.service.ImageS
 
   @Override
   public String removeImageFromFolder(String name) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+    File currentDir = new File("");
+    File destination = new File(currentDir.getAbsoluteFile().getParent() +
+        File.separator + "images" + File.separator + "public" + File.separator
+        + name);
 
-  @Override
-  public String removeImageFromDb(String name) {
-    // TODO Auto-generated method stub
-    return null;
+    if (destination.delete() || !destination.exists()) {
+      return "Image is deleted succesfully!";
+    } else {
+      throw new BadRequestException("Couldn't delete image, try again later!");
+    }
   }
 
   private String makeNameFromOriginal(String ogName) {

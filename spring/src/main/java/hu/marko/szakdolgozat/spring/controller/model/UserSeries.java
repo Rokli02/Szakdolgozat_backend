@@ -16,9 +16,10 @@ public class UserSeries {
   private String modification;
 
   public UserSeries(hu.marko.szakdolgozat.spring.service.model.UserSeries userSeries) {
-    this(userSeries.getId(), new Series(userSeries.getSeries()),
-        new Status(userSeries.getStatus()), userSeries.getSeason(),
-        userSeries.getEpisode(), userSeries.getModification());
+    this(userSeries.getId(),
+        userSeries.getSeries() != null ? new Series(userSeries.getSeries()) : null,
+        userSeries.getStatus() != null ? new Status(userSeries.getStatus()) : null,
+        userSeries.getSeason(), userSeries.getEpisode(), userSeries.getModification());
   }
 
   public hu.marko.szakdolgozat.spring.service.model.UserSeries toServiceUserseries() {

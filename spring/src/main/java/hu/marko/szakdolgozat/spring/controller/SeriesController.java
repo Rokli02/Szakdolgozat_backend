@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
@@ -53,7 +54,7 @@ public class SeriesController {
   }
 
   @PostMapping("")
-  public ResponseEntity<SeriesWrapper> saveSeries(@RequestBody @NotNull NewSeries newSeries) {
+  public ResponseEntity<SeriesWrapper> saveSeries(@RequestBody @NotNull @Valid NewSeries newSeries) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(new SeriesWrapper(new Series(seriesService.save(newSeries.toServiceSeries()))));
   }
@@ -69,6 +70,10 @@ public class SeriesController {
 
   @DeleteMapping("/image/{id}")
   public ResponseEntity<Message> deleteImage(@PathVariable("id") @NotNull Long id) {
-    return null;
+    if (seriesService.deleteImage(id)) {
+      return ResponseEntity.ok().body(new Message("Image deleted succesfully!"));
+    }
+
+    return ResponseEntity.ok().body(new Message("Delete is unsuccesful!"));
   }
 }

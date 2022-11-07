@@ -14,4 +14,8 @@ public class Role {
   public Role(hu.marko.szakdolgozat.spring.repository.model.Role role) {
     this(role.getId(), role.getName());
   }
+
+  public hu.marko.szakdolgozat.spring.repository.model.Role toEntity() {
+    return new hu.marko.szakdolgozat.spring.repository.model.Role(id, name);
+  }
 }

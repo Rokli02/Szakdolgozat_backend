@@ -7,8 +7,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.validation.constraints.Min;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,11 +17,8 @@ import lombok.NoArgsConstructor;
 public class Series {
   private Long id;
   private String title;
-  @Min(1900)
   private Integer prodYear;
-  @Min(1)
   private Integer ageLimit;
-  @Min(1)
   private Integer length;
   private String added;
   private List<Season> seasons;

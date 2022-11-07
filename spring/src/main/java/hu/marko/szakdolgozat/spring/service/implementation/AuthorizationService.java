@@ -55,7 +55,7 @@ public class AuthorizationService
     if (oUser.isPresent()) {
       throw new BadRequestException("Username or email is already in use!");
     }
-    Optional<hu.marko.szakdolgozat.spring.repository.model.Role> oRole = roleRepository.findById(1L);
+    Optional<hu.marko.szakdolgozat.spring.repository.model.Role> oRole = roleRepository.findByName("user");
     if (!oRole.isPresent()) {
       throw new NotFoundException("Role doesn't exists!");
     }

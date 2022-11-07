@@ -60,7 +60,6 @@ public class NewsfeedService implements hu.marko.szakdolgozat.spring.service.New
   @Override
   public PageModel<Newsfeed> findByUserAndPageAndSizeAndFilterAndOrder(Long userid, Integer page, Integer size,
       String filter, String order, Boolean ascendingDirection) {
-    System.out.println("\n\nUserId:\n" + userid);
     Optional<User> oUser = userRepository.findById(userid);
     if (!oUser.isPresent()) {
       throw new NotFoundException("Valami hiba lépett fel, jelentkezz be újra!");

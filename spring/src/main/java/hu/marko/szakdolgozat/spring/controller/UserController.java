@@ -3,6 +3,7 @@ package hu.marko.szakdolgozat.spring.controller;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class UserController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Message> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
+  public ResponseEntity<Message> updateUser(@PathVariable("id") Long id, @RequestBody @Valid User user) {
     if (userService.update(id, user.toServiceUser())) {
       return ResponseEntity.ok().body(new Message("User is modified succesfully!"));
     }

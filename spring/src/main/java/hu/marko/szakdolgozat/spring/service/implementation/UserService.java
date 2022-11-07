@@ -74,8 +74,6 @@ public class UserService implements hu.marko.szakdolgozat.spring.service.UserSer
     if (!oUser.isPresent()) {
       throw new NotFoundException("There is no such user!");
     }
-    Optional<hu.marko.szakdolgozat.spring.repository.model.Role> oRole = roleRepository
-        .findById(user.getRole().getId());
     hu.marko.szakdolgozat.spring.repository.model.User entity = oUser.get();
 
     if (user.getName() != null) {
@@ -96,8 +94,12 @@ public class UserService implements hu.marko.szakdolgozat.spring.service.UserSer
     if (user.getActive() != null) {
       entity.setActive(user.getActive());
     }
-    if (oRole.isPresent()) {
-      entity.setRole(oRole.get());
+    if (user.getRole() != null) {
+      Optional<hu.marko.szakdolgozat.spring.repository.model.Role> oRole = roleRepository
+          .findById(user.getRole().getId());
+      if (oRole.isPresent()) {
+        entity.setRole(oRole.get());
+      }
     }
 
     hu.marko.szakdolgozat.spring.repository.model.User updatedUser = userRepository.save(entity);

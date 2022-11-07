@@ -30,6 +30,6 @@ public class User {
   hu.marko.szakdolgozat.spring.repository.model.User toEntity() {
     return new hu.marko.szakdolgozat.spring.repository.model.User(this.id, this.name, this.birthdate, this.username,
         this.email, this.password, this.active, this.created,
-        new hu.marko.szakdolgozat.spring.repository.model.Role(this.role.getId(), this.role.getName()));
+        this.role != null ? this.role.toEntity() : null);
   }
 }

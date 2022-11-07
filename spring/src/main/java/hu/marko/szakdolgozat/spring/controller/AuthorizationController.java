@@ -3,6 +3,7 @@ package hu.marko.szakdolgozat.spring.controller;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class AuthorizationController {
   }
 
   @PostMapping("/signup")
-  public ResponseEntity<Message> signup(@RequestBody @NotNull NewUser newUser) {
+  public ResponseEntity<Message> signup(@RequestBody @NotNull @Valid NewUser newUser) {
     if (authService.signup(new User(null, newUser.getName(), newUser.getUsername(), newUser.getEmail(),
         newUser.getBirthdate(), newUser.getPassword(), null, null, null))) {
       return ResponseEntity.status(HttpStatus.CREATED).body(new Message("Signed up successfully!"));

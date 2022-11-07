@@ -19,9 +19,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import hu.marko.szakdolgozat.spring.exception.BadRequestException;
 import hu.marko.szakdolgozat.spring.filter.AuthenticationFilter;
@@ -41,6 +43,10 @@ public class SecurityConfig {
   @Bean
   @Order(1)
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    CharacterEncodingFilter filter = new CharacterEncodingFilter();
+    filter.setEncoding("UTF-8");
+    filter.setForceEncoding(true);
+
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .authorizeRequests().antMatchers(HttpMethod.GET, "/api/categories").permitAll()
         .antMatchers(HttpMethod.GET, "/api/statuses").permitAll()
@@ -61,6 +67,7 @@ public class SecurityConfig {
 
         .addFilter(new AuthenticationFilter(AuthenticationManagerBean()))
         .addFilterBefore(new AuthorizationFilter(authService), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(filter, CsrfFilter.class)
         .cors(Customizer.withDefaults())
         .csrf().disable();
 
@@ -73,8 +80,6 @@ public class SecurityConfig {
     corsConfig.setAllowedOrigins(Arrays.asList("*"));
     corsConfig.setMaxAge(3600L);
     corsConfig.addAllowedMethod("*");
-    // corsConfig.setAllowedMethods(Arrays.asList("GET", "HEAD", "POST", "PUT",
-    // "DELETE", "OPTIONS"));
     corsConfig.addAllowedHeader("*");
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", corsConfig);

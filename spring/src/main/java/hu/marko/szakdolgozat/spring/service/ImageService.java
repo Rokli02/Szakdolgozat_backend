@@ -11,6 +11,4 @@ public interface ImageService {
   String renameFromTempToPerm(Image preName);
 
   String removeImageFromFolder(String name);
-
-  String removeImageFromDb(String name);
 }

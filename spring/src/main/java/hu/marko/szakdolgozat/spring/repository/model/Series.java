@@ -57,7 +57,7 @@ public class Series {
   private List<Newsfeed> newsfeeds;
   @OneToMany(mappedBy = "series", targetEntity = Userseries.class)
   private List<Userseries> userserieses;
-  @OneToOne(cascade = CascadeType.ALL, optional = true)
+  @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
   @JoinColumn(name = "f_image_id", unique = true, nullable = true)
   private Image image;
 }
