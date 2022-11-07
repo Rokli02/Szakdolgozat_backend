@@ -42,10 +42,10 @@ export class UserSeriesService implements iUserSeriesService {
           query.orderBy('series.title', direction);
           break;
         case 'prod_year':
-          query.orderBy('series.prod_year', direction);
+          query.orderBy('series.prodYear', direction);
           break;
         case 'age_limit':
-          query.orderBy('series.age_limit', direction);
+          query.orderBy('series.ageLimit', direction);
           break;
         case 'length':
           query.orderBy('series.length', direction);

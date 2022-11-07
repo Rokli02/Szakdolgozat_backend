@@ -37,11 +37,11 @@ export class SeriesService implements iSeriesService {
     if(order) {
       switch (order) {
         case "prod_year":
-          query.orderBy('series.prod_year', direction)
+          query.orderBy('series.prodYear', direction)
             .addOrderBy('series.added', direction);
           break;
         case "age_limit":
-          query.orderBy('series.age_limit', direction);
+          query.orderBy('series.ageLimit', direction);
           break;
         case "length":
           query.orderBy('series.length', direction);

@@ -62,6 +62,8 @@ export class AuthorizationController {
       } catch(err) {
         return next(err);
       }
+    } else {
+      next();
     }
   }
 
