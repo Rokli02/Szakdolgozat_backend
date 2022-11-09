@@ -1,7 +1,7 @@
 {
   "name": "fastify",
   "version": "1.0.0",
-  "author": "Makró Roland",
+  "author": "Markó Roland",
   "description": "Szakdolgozat Fastify API",
   "type": "commonjs",
   "scripts": {

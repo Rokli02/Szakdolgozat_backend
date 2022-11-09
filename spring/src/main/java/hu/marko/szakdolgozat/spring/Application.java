@@ -22,9 +22,9 @@ public class Application {
 	// CommandLineRunner runner(AuthorizationService authorizationService,
 	// RoleRepository roleRepository) {
 	// return args -> {
-	// roleRepository.save(new Role(1L, "user"));
-	// roleRepository.save(new Role(2L, "siteManager"));
-	// roleRepository.save(new Role(3L, "admin"));
+	// roleRepository.save(new Role(null, "user"));
+	// roleRepository.save(new Role(null, "siteManager"));
+	// roleRepository.save(new Role(null, "admin"));
 	// };
 	// }
 }

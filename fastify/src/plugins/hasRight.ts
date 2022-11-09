@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyRegisterOptions, FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify';
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
 
 export default fp(async (fastify: FastifyInstance, opts: { appropriateRight: string[] }) => {

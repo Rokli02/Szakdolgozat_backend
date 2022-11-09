@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 public class Userseries {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(columnDefinition = "int(11)")
   private Long id;
   @ManyToOne(targetEntity = User.class)
   @JoinColumn(name = "f_user_id", nullable = false)

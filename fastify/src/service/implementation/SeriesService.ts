@@ -172,7 +172,6 @@ export class SeriesService implements iSeriesService {
       });
     }
 
-    
     // Frissítés
     const updatedSeries = await this.repository.save(createdSeries);
     if(entity.image && !entity.image.id && dbSeries.image) {

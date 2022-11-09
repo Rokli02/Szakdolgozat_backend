@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 public class Newsfeed {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(columnDefinition = "int(11)")
   private Long id;
   @Column(nullable = false)
   private String title;

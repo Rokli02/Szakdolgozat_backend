@@ -1,6 +1,15 @@
 import 'reflect-metadata'
 import fp from 'fastify-plugin'
 import { DataSource } from 'typeorm';
+import { Series } from '../../entity/Series';
+import { Newsfeed } from '../../entity/Newsfeed';
+import { Season } from '../../entity/Season';
+import { Status } from '../../entity/Status';
+import { User } from '../../entity/User';
+import { Role } from '../../entity/Role';
+import { Userseries } from '../../entity/Userseries';
+import { Category } from '../../entity/Category';
+import { Image } from '../../entity/Image';
 
 let dataSource: DataSource;
 export default fp(async (fastify) => {
@@ -11,9 +20,9 @@ export default fp(async (fastify) => {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    entities: ["./src/entity/*.{js,ts}"],//
+    entities: [Series, Newsfeed, Season, Status, User, Role, Userseries, Category, Image],//"./src/entity/*.{js,ts}"
     logging: false,
-    synchronize: true,
+    synchronize: false,
   });
   
   dataSource.initialize().then(() => {

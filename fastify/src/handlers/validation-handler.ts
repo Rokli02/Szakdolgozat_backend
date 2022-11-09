@@ -71,7 +71,7 @@ export const validateUserSeriesFields = async (req, res) => {
 }
 
 const validEmail = (email: string): { message: string } | undefined => {
-  const emailRegex = /^[\w-\.]+@([\w-]{2,}\.)+[\w-]{2,4}$/;
+  const emailRegex = /^[\w\-_\.öÖüÜóÓúÚűŰőŐáÁéÉíÍ]+@([\w-]{2,}\.)+[\w-]{1,5}$/;
   if(!emailRegex.test(email)) {
     return { message: "Email must be valid!" };
   }

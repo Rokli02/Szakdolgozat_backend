@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class Category {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(columnDefinition = "int(11)")
   Long id;
   @Column(nullable = false)
   String name;

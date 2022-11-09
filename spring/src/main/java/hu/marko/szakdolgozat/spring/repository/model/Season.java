@@ -24,6 +24,7 @@ import lombok.NoArgsConstructor;
 public class Season {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(columnDefinition = "int(11)")
   private Long id;
   @Column(nullable = false)
   @Min(1)

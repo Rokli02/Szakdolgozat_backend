@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class Image {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(columnDefinition = "int(11)")
   private Long id;
   @Column(nullable = false, unique = true)
   private String name;

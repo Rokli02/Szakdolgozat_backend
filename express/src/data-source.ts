@@ -1,4 +1,14 @@
+import path = require('path');
 import { DataSource } from "typeorm"
+import { Category } from './entity/Category';
+import { Image } from './entity/Image';
+import { Newsfeed } from './entity/Newsfeed';
+import { Role } from './entity/Role';
+import { Season } from './entity/Season';
+import { Series } from './entity/Series';
+import { Status } from './entity/Status';
+import { User } from './entity/User';
+import { Userseries } from './entity/Userseries';
 
 const mysqlDataSource = new DataSource({
     type: "mysql",
@@ -7,11 +17,12 @@ const mysqlDataSource = new DataSource({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    entities: ["./src/entity/*.{js,ts}"],
-    migrations: ["./src/migration/**/*.{js,ts}"],
+    entities: [Series, Newsfeed, Season, Status, User, Role, Userseries, Category, Image],
+    migrations: [path.join(__dirname,"/migration/**/*.{js,ts}")],
     logging: false,
-    synchronize: true,
+    synchronize: false,
 });
+
 
 mysqlDataSource.initialize().then(() => {
     console.log('Connected to database succesfully!');

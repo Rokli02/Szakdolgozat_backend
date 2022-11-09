@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>hu.marko.szakdolgozat</groupId>
 	<artifactId>spring</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>spring</name>
-	<description>Szakdolgozat Backend in Spring Boot</description>
+	<description>Szakdolgozat Backend in Spring Boot aPI</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

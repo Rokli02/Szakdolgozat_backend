@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify'
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import fp from 'fastify-plugin';
 import { iAuthorizationService } from '../../service/AuthorizationService';
 import { AuthorizationSerivce } from '../../service/implementation/AuthorizationService';

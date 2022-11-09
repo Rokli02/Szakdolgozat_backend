@@ -2,7 +2,6 @@ import "reflect-metadata";
 import { config } from 'dotenv';
 config();
 import * as express from "express";
-import * as bodyParser from "body-parser";
 import {Request, Response} from "express";
 import { errorHandler } from './controller/ErrorController';
 import { userRoutes } from './routes/user.routes';

@@ -25,9 +25,10 @@ import lombok.NoArgsConstructor;
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(columnDefinition = "int(11)")
   private Long id;
   @NotBlank
-  @Column(nullable = false, columnDefinition = "bigint(20) AUTO_INCREMENT")
+  @Column(nullable = false)
   private String name;
   @NotBlank
   @Column(columnDefinition = "date")
