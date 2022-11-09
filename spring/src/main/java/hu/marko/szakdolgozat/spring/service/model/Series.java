@@ -1,6 +1,5 @@
 package hu.marko.szakdolgozat.spring.service.model;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +20,7 @@ public class Series {
   private Integer prodYear;
   private Integer ageLimit;
   private Integer length;
-  private Date added;
+  private String added;
   private List<Season> seasons;
   private Set<Category> categories;
   private Image image;
@@ -46,7 +45,7 @@ public class Series {
     this.prodYear = series.getProdYear();
     this.ageLimit = series.getAgeLimit();
     this.length = series.getLength();
-    this.added = series.getAdded();
+    this.added = series.getAdded() != null ? series.getAdded().toString().split(" ")[0] : null;
     this.seasons = ss;
     this.categories = cs;
     this.image = series.getImage() != null ? new Image(series.getImage()) : null;

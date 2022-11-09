@@ -1,6 +1,6 @@
 package hu.marko.szakdolgozat.spring.repository.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 
@@ -47,7 +47,7 @@ public class Series {
   private Integer length;
   @CreationTimestamp
   @Column(updatable = false, columnDefinition = "datetime(6) default CURRENT_TIMESTAMP(6)")
-  private Date added;
+  private Timestamp added;
   @OneToMany(mappedBy = "series", targetEntity = Season.class, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Season> seasons;
   @ManyToMany

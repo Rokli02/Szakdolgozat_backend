@@ -108,7 +108,7 @@ export class AuthorizationSerivce implements iAuthorizationService {
   verifyUserToken = async (token: string): Promise<User> => {
     const tokenParts = token.split(' ');
     if(tokenParts[0] !== 'Bearer' || !tokenParts[1]) {
-      throwError('400', 'Invalid token!');
+      throwError('401', 'Invalid token!');
     }
 
     //Token kibontás - ERROR-t dobhat
@@ -122,7 +122,7 @@ export class AuthorizationSerivce implements iAuthorizationService {
       active: true
     });
     if(!user) {
-      throwError('400', 'Token doesn\'t have a valid user!');
+      throwError('401', 'Token doesn\'t have a valid user!');
     }
 
     return user;

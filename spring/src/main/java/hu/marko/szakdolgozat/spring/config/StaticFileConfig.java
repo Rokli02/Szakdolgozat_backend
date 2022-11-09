@@ -13,10 +13,9 @@ public class StaticFileConfig implements WebMvcConfigurer {
 
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    File currentDir = new File("");
     String externalImagePath = "file:" + File.separator + File.separator + File.separator
-        + currentDir.getAbsoluteFile().getParent() +
-        File.separator + "images" + File.separator + "public" + File.separator;
+        + System.getProperty("java.class.path").split(File.pathSeparator)[0].split("spring")[0] +
+        "images" + File.separator + "public" + File.separator;
 
     registry
         .addResourceHandler("/api/images/public/**")

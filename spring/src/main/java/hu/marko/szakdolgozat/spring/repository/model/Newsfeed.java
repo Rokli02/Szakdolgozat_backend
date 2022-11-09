@@ -1,6 +1,6 @@
 package hu.marko.szakdolgozat.spring.repository.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,7 +31,7 @@ public class Newsfeed {
   private String description;
   @UpdateTimestamp
   @Column(columnDefinition = "datetime(6) default CURRENT_TIMESTAMP(6)")
-  private Date modification;
+  private Timestamp modification;
   @ManyToOne(targetEntity = Series.class)
   @JoinColumn(name = "f_series_id", nullable = false)
   private Series series;

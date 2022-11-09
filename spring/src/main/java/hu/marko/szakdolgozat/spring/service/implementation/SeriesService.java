@@ -3,7 +3,6 @@ package hu.marko.szakdolgozat.spring.service.implementation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -50,18 +49,18 @@ public class SeriesService implements hu.marko.szakdolgozat.spring.service.Serie
       interOrder = order;
     }
 
-    Page<hu.marko.szakdolgozat.spring.repository.model.Series> pagedEntity;
     String interFilter = "";
     if (filter != null) {
       interFilter = filter;
     }
-    pagedEntity = seriesRepository
+
+    Page<hu.marko.szakdolgozat.spring.repository.model.Series> pagedEntity = seriesRepository
         .findWithPagination(PageRequest.of(page - 1, size, Sort.by(direction, interOrder)), interFilter);
 
-    Set<Series> seriesList = StreamSupport.stream(pagedEntity.getContent().spliterator(), false)
+    List<Series> seriesList = StreamSupport.stream(pagedEntity.getContent().spliterator(), false)
         .map(Series::new)
-        .collect(Collectors.toSet());
-    PageModel<Series> pageModel = new PageModel<>(new ArrayList<Series>(seriesList), pagedEntity.getTotalElements());
+        .collect(Collectors.toList());
+    PageModel<Series> pageModel = new PageModel<>(seriesList, pagedEntity.getTotalElements());
     return pageModel;
   }
 

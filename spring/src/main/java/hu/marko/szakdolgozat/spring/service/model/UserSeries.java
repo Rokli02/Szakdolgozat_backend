@@ -19,7 +19,7 @@ public class UserSeries {
   public UserSeries(Userseries userseries) {
     this(userseries.getId(), new Series(userseries.getSeries()),
         new Status(userseries.getStatus()), userseries.getSeason(), userseries.getEpisode(),
-        userseries.getModification() != null ? userseries.getModification().toString() : null);
+        userseries.getModification() != null ? userseries.getModification().toString().split(" ")[0] : null);
   }
 
   public Userseries toEntity() {

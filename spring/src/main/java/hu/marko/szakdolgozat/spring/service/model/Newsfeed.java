@@ -15,7 +15,8 @@ public class Newsfeed {
   private Series series;
 
   public Newsfeed(hu.marko.szakdolgozat.spring.repository.model.Newsfeed newsfeed) {
-    this(newsfeed.getId(), newsfeed.getTitle(), newsfeed.getDescription(), newsfeed.getModification().toString(),
+    this(newsfeed.getId(), newsfeed.getTitle(), newsfeed.getDescription(),
+        newsfeed.getModification().toString().split(" ")[0],
         new hu.marko.szakdolgozat.spring.service.model.Series(newsfeed.getSeries()));
   }
 

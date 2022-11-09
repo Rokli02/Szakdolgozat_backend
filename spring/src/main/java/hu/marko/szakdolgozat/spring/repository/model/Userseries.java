@@ -1,6 +1,6 @@
 package hu.marko.szakdolgozat.spring.repository.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,5 +46,5 @@ public class Userseries {
   private Integer episode;
   @UpdateTimestamp
   @Column(columnDefinition = "datetime(6) default CURRENT_TIMESTAMP(6)")
-  private Date modification;
+  private Timestamp modification;
 }
